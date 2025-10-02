@@ -1,6 +1,0 @@
-# Handout - Stac Tooling
-
-## bearbeitet von:
-Lenja Fipper, @Lenja-fpr
-...
-...
