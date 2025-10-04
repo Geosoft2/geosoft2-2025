@@ -16,14 +16,17 @@ Lenja Fipper, @Lenja-fpr
 - [OL-STAC](#ol-stac)
 
 ### STAC Browser
-Der STAC Browser ist ein Tool, um statische STAC-Datenbanken zu durchsuchen. Dabei werden die Daten möglichst benutzerfreundlich dargestellt. Der Browser wurde als Single-Page-Anwendung entwickelt, um Nutzung und Weiterentwicklung zu vereinfachen. Der Browser unterstützt aktuell neun verschiedene Sprachen, unter anderem Deutsch.
+Der STAC Browser ist ein Tool, um statische STAC-Datenbanken zu durchsuchen. Dabei werden die Daten möglichst benutzerfreundlich dargestellt. Der Browser wurde als Single-Page-Anwendung entwickelt, um Nutzung und Weiterentwicklung zu vereinfachen.
 Der Browser kann in Verbindung mit APIs verwendet werden, der Fokus der Entwicklung liegt allerdings nicht auf dieser Nutzung.
 
 TODO: Private query parameters???
 
-Der STAC Browser kann über npm installiert und in eigene Webprojekte eingebunden werden. Der Browser kann für das jeweilige Projekt angepasst werden.
+TODO: Additional metadata filds ???: Zum rendern der Daten wird die Libary stac-filds genutzt, die verschiedene Regeln zum Anzeigen verschiedener stac-extentions enthält. TODO: ??? 
 
-TODO: Mehr möglickeiten, den Browser anzupassen
+Der STAC Browser kann über npm installiert und in eigene Webprojekte eingebunden werden. Der Browser kann für das jeweilige Projekt angepasst werden.
+Es werden beispielsweise neun verschiedene Sprachen unterstützt, unter anderem Deutsch. Auch verschiedene Basemaps können gerendert werden. Es gibt zudem die Möglichkeit, den STAC Browser mit anderen Diensten zu verknüpfen. Weitere Änderungen können im Ordner src/theme der Browserdateien angepasst werden. (TODO: weitere änderungen oder generell???)
+
+Auch Dockerisierung wird unterstützt.
 
 Mehr Informationen zur Installation und Nutzung: https://github.com/radiantearth/stac-browser?tab=readme-ov-file#get-started
 ### STAC-js
