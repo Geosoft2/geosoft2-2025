@@ -41,7 +41,14 @@ TODO: WIe nutzt man einen Browser?
 amax.openstreetmap.fr/api/users/8684d422-df83-42a4-85ca-acc5be7bc357/catalog/?.language=de
 
 ### STAC-js
-STAC-js ist eine Libary für JS, um mit STAC Datenbanken zu interagieren.
+STAC-js ist eine Libary für JS, um mit STAC Datenbanken zu interagieren und mit schreibgeschützten STAC Objekten zu arbeiten. Dabei arbeitet STAC-js nicht mit Dateien, es ist auch nicht möglich Dateien aus einem Dateisystem oder einer Webpage zu laden. So kann STAC-js zwar im Browser und in NodeJS, aber nicht zum Erstellen oder Updaten eines Katalogs genutzt werden. 
+
+Es können einzelne Funktionen oder auch eine gesammte Klasse (TODO: ist Klasse das richtige Wort?) importiert werden.
+```js
+import create from 'stac-js'
+import {Collection} from 'stac-js'
+```
+TODO: import STAC aufnehmen?
 
 ### OL-STAC
 
@@ -65,7 +72,6 @@ https://apps.thejeshgn.com/stac-browser/#/external/panor
 https://www.youtube.com/watch?v=16wryujzqd8 12:10
 
 ### STAC-js
-https://stacindex.org/ecosystem?language=JavaScript&category=Static
 https://github.com/moregeo-it/stac-js
 https://stac-js.moregeo.it/latest/
 https://www.youtube.com/watch?v=16wryujzqd8 4:06
