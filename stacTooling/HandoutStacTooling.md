@@ -41,6 +41,7 @@ TODO: WIe nutzt man einen Browser?
 amax.openstreetmap.fr/api/users/8684d422-df83-42a4-85ca-acc5be7bc357/catalog/?.language=de
 
 ### STAC-js
+STAC-js ist eine Libary für JS, um mit STAC Datenbanken zu interagieren.
 
 ### OL-STAC
 
@@ -56,11 +57,17 @@ https://thejeshgn.com/2024/05/08/exploring-stac-datasets-with-browser/
 
 ### Tools generell
 https://stacindex.org/
+https://www.youtube.com/watch?v=16wryujzqd8
 
 ### Browser
 amax.openstreetmap.fr/api/users/8684d422-df83-42a4-85ca-acc5be7bc357/catalog/?.language=de
 https://apps.thejeshgn.com/stac-browser/#/external/panor
+https://www.youtube.com/watch?v=16wryujzqd8 12:10
 
 ### STAC-js
+https://stacindex.org/ecosystem?language=JavaScript&category=Static
+https://github.com/moregeo-it/stac-js
+https://stac-js.moregeo.it/latest/
+https://www.youtube.com/watch?v=16wryujzqd8 4:06
 
 ### OL-STAC
