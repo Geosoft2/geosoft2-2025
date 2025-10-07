@@ -45,7 +45,7 @@ import getObjectType from 'stac-js'
 import {STACObject} from 'stac-js'
 ```
 
-### Beispiel: STACObject
+#### Beispiel: STACObject
 - Basisklasse für STAC-Objekte
 - In der [Dokumentation](https://stac-js.moregeo.it/latest/#stacobject): "Don't instantiate this class!":
   - nicht dazu gedacht STAC-Objekte zu erstellen
