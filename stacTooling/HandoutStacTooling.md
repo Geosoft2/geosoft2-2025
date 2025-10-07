@@ -3,7 +3,7 @@ STAC Tooling (bspw. STAC Index selber, STAC Browser, pystac, pystac-client, stac
 
 --> Vorstellung gängiger Tools mit besonderem Fokus auf Tools, die für diesen Kurs relevant seien könnten
 
-## bearbeitet von:
+#### bearbeitet von:
 Lenja Fipper, @Lenja-fpr
 
 ...
