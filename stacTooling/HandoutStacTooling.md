@@ -31,8 +31,6 @@ Mehr Informationen zur Installation und Nutzung: https://github.com/radiantearth
 - Hier kann gezielt nach STAC Katalogen oder STAC APIs gesucht werden, es sind auch Beispielkataloge angezeigt, die ausgewählt werden können.
 - Innerhalb der Kataloge kann durch Filter und Schlüsselwörter nach Geodaten gesucht werden.
 
-TODO: https://apps.thejeshgn.com/stac-browser/#/external/panor als zweites Beispiel?
-
 ## STAC-js
 STAC-js ist eine Libary für JS, die Funktionen und Klassen enthält, die die Interaktion mit STAC-Daten oder schreibgeschützten STAC-Objekten vereinfachen. STAC-js kann im Browser und in NodeJS genutzt werden. Die Funktionen sind allerdings nicht direkt auf Dateien oder Dateisysteme anwendbar. So kann STAC-js nicht zum Erstellen oder Updaten eines Katalogs genutzt werden. 
 
@@ -65,9 +63,23 @@ OL-STAC ermöglicht es, STAC-Daten in einer STAC LayerGroup in OpenLayers anzuze
 
 ### Einbinden von OL-STAC in ein Projekt
 zunächst muss OL-STAC über npm installiert werden.
-```js
 
+Einbinden in den Code:
+```js
+//STACLayer importieren
+import STACLayer from 'ol-stac'
+
+//neuen STAC-Layer mit Geodaten erstellen
+const stac = new STAC({
+  url: //Daten als URL
+  //ODER
+  data: //Daten als inline JSON data
+})
+
+//Layer wie gewohnt in eine Karte "map" laden
+map.addLayer(stac)
 ```
+
 ### Beispiel
 - Link: https://openlayers.org/en/latest/examples/stac-item.html
 - Beispielmap, die eine Basemap und Sentinel 2 Daten enthält
@@ -83,6 +95,7 @@ zunächst muss OL-STAC über npm installiert werden.
 - 
 - https://github.com/moregeo-it/ol-stac
 - https://openlayers.org/en/latest/examples/stac-item.html
+- https://ol-stac.moregeo.it/doc/quickstart.html
 - 
 ## Links zur Recherche:
 
@@ -103,8 +116,4 @@ https://www.youtube.com/watch?v=16wryujzqd8 12:10
 https://www.youtube.com/watch?v=16wryujzqd8 4:06
 
 ### OL-STAC
-https://ol-stac.moregeo.it/en/latest/apidoc/
-https://ol-stac.moregeo.it/doc/quickstart.html
-https://ol-stac.moregeo.it/
-https://talks.osgeo.org/foss4g-europe-2024/talk/3V7LED/
 https://av.tib.eu/media/68503
