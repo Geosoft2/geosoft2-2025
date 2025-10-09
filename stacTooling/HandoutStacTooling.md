@@ -20,21 +20,18 @@ Der STAC Browser ist ein Tool, um statische STAC-Datenbanken zu durchsuchen. Dab
 
 Es gibt die Möglichkeit, den STAC Browser mit anderen Diensten zu verknüpfen. Die Nutzung von Extentions sowie Dockerisierung wird ebenfalls unterstützt. Der Browser kann auch in Verbindung mit APIs verwendet werden, der Fokus der Entwicklung liegt allerdings nicht auf dieser Nutzung. 
 
-Der STAC Browser kann über npm installiert und in eigene Webprojekte eingebunden werden. Dabei werden einige Elemente des Browsers automatisch erstellt, beispielsweise der Titel, der STAC Browser kann für das aber auch angepasst werden.
-Es werden beispielsweise neun verschiedene Sprachen unterstützt, unter anderem Deutsch. Auch verschiedene Basemaps können zur Anzeige der Daten gerendert werden. Weitere Änderungen können im Ordner src/theme der Browserdateien angepasst werden. (TODO: weitere änderungen oder generell???)
+Der STAC Browser kann über npm installiert und in eigene Webprojekte eingebunden werden. Dabei werden einige Elemente des Browsers automatisch erstellt, beispielsweise der Titel, der STAC Browser kann für das jeweilige Projekt aber auch angepasst werden.
+Es werden beispielsweise neun verschiedene Sprachen unterstützt, unter anderem Deutsch. Auch verschiedene Basemaps können zur Anzeige der Daten gerendert werden.
 
 Mehr Informationen zur Installation und Nutzung: https://github.com/radiantearth/stac-browser?tab=readme-ov-file#get-started
 
 ### Beispiel:
 - Link: https://radiantearth.github.io/stac-browser/#/?.language=de
-TODO: Was ist das für ein Beispiel? von wem wird das betrieben?
-
-Hier kann nach STAC Katalogen gesucht werden und dann innerhalb der Kataloge nach Geodaten gesucht werden
+- offizieller STAC Browser der Radiant Earth Foundation
+- Hier kann gezielt nach STAC Katalogen oder STAC APIs gesucht werden, es sind auch Beispielkataloge angezeigt, die ausgewählt werden können.
+- Innerhalb der Kataloge kann durch Filter und Schlüsselwörter nach Geodaten gesucht werden.
 
 TODO: https://apps.thejeshgn.com/stac-browser/#/external/panor als zweites Beispiel?
-
-TODO: WIe nutzt man einen Browser? 
-amax.openstreetmap.fr/api/users/8684d422-df83-42a4-85ca-acc5be7bc357/catalog/?.language=de
 
 ## STAC-js
 STAC-js ist eine Libary für JS, die Funktionen und Klassen enthält, die die Interaktion mit STAC-Daten oder schreibgeschützten STAC-Objekten vereinfachen. STAC-js kann im Browser und in NodeJS genutzt werden. Die Funktionen sind allerdings nicht direkt auf Dateien oder Dateisysteme anwendbar. So kann STAC-js nicht zum Erstellen oder Updaten eines Katalogs genutzt werden. 
@@ -66,6 +63,11 @@ import {STACObject} from 'stac-js'
 ## OL-STAC
 OL-STAC ermöglicht es, STAC-Daten in einer STAC LayerGroup in OpenLayers anzuzeigen. Geladen werden können Geometries, GeoTIFF-Dateien, web map layers und andere Geodaten.
 
+### Einbinden von OL-STAC in ein Projekt
+zunächst muss OL-STAC über npm installiert werden.
+```js
+
+```
 ### Beispiel
 - Link: https://openlayers.org/en/latest/examples/stac-item.html
 - Beispielmap, die eine Basemap und Sentinel 2 Daten enthält
