@@ -76,7 +76,7 @@ const stac = new STAC({
   data: //Daten als inline JSON data
 })
 
-//Layer wie gewohnt in eine Karte "map" laden
+//Layer in eine Karte "map" laden
 map.addLayer(stac)
 ```
 
