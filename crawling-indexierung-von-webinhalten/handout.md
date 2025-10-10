@@ -9,12 +9,13 @@ Wofür braucht man das? Von großen Web-Suchmaschinen über Nachrichtenseiten bi
 ## Grundprinzipien von Crawlern
 Ein Web-Crawler (auch Spider oder Bot genannt) ist ein Programm, das systematisch Webseiten besucht, um deren Inhalte zu sammeln und zu indizieren. Er startet mit einer Liste von Start-URLs (Seed-URLs), lädt eine Seite herunter, extrahiert den Text und alle darin enthaltenen Links und fügt diese neuen Links der Warteschlange (Frontier) hinzu. \
 Anschließend wird die nächste URL aus der Frontier abgearbeitet. Dieser Prozess setzt sich fort, bis alle relevanten Seiten erfasst sind oder eine Abbruchbedingung erreicht wird.
+<!-- Gerne noch ein zwei Sätze darüber verlieren, wie die Warteschlange aufgebaut ist. Welche Arten von Priorisierungen in der Warteschlange gibt es? -->
 
-Ablauf eines Crawlers: Start mit Seed-URLs → Seite abrufen (HTTP-Request) → Seite parsen → Text indizieren und Links extrahieren → neue Links zur Frontier hinzufügen
+Ablauf eines Crawlers: Start mit Seed-URLs → Seite abrufen (HTTP-Request) → Seite parsen → Text indizieren und Links extrahieren → neue Links zur Frontier hinzufügen <!-- 1. Das ganze vielleicht in eine nummierte Liste (also 1., 2.,... 6. überführen und dann am Ende nochmal verdeutlichen, dass der Prozess iterativ ist und wieder von Vorne beginnt. Man könnte auch zu jedem Schritt ruhig 1-2 Sätze schreiben, die ggf. verdeutlichen, was da passiert) -->
 
 Modulare Architektur: Typische Komponenten sind eine URL-Frontier (Warteschlange), ein DNS/HTTP-Fetch-Modul, ein Parser (für HTML/Links), eine Duplikaterkennung und ein Indexierer.
 
-Robustheit: Der Crawler muss fehlertolerant sein (z.B. gegen Abbruch durch ungültige URLs) und „Spider-Traps“ (seitenweise Endlosschleifen) erkennen und umgehen.
+Robustheit: Der Crawler muss fehlertolerant sein (z.B. gegen Abbruch durch ungültige URLs) und „Spider-Traps“ (seitenweise Endlosschleifen) erkennen und umgehen. <!-- Man könnte hier nochmal auf Tiefensuche und Breitensuche eingehen und auch über die maximale Tiefe von Crawlern reden um zu vermeiden, dass der Bot nicht in eine solche Endlosschleife rutscht.-->
 ## Strategien zur Indexierung
  TODO
 ## Herausforderungen
@@ -22,27 +23,29 @@ Robustheit: Der Crawler muss fehlertolerant sein (z.B. gegen Abbruch durch ungü
  Das Web wächst ständig. Historisch mussten Suchmaschinen bereits in den 1990er Jahren ununterbrochen zusätzliche Hardware für Crawling und Indexierung bereitstellen, da sich die Zahl der Seiten alle paar Monate verdoppelte. Moderne Crawler setzen auf verteilte Architekturen (z.B. Apache Nutch auf Hadoop) und parallele Prozesse, um Milliarden von Seiten zu verarbeiten.
 
 ### robots.txt und Politeness
- Website-Betreiber können Crawler über die robots.txt-Datei steuern, indem sie angeben, welche URLs gecrawlt werden dürfen. Diese Datei dient vor allem dazu, Crawling-Traffic zu lenken und Serverüberlastung zu vermeiden. Crawler sollten die robots.txt-Regeln beachten und vorsichtig crawlen: etwa nie mehr als eine Verbindung gleichzeitig zu einem Host öffnen und zwischen den. Solche Politeness-Strategien verhindern, dass Server durch das Crawling überlastet oder blockiert werden.
+ Website-Betreiber können Crawler über die robots.txt-Datei steuern, indem sie angeben, welche URLs gecrawlt werden dürfen. Diese Datei dient vor allem dazu, Crawling-Traffic zu lenken und Serverüberlastung zu vermeiden. Crawler sollten die robots.txt-Regeln beachten und vorsichtig crawlen: etwa nie mehr als eine Verbindung gleichzeitig zu einem Host öffnen und zwischen den <!-- Satz unvollständig -->. Solche Politeness-Strategien verhindern, dass Server durch das Crawling überlastet oder blockiert werden.
 
 ### Dynamische Inhalte
  Viele moderne Webseiten laden Inhalte erst zur Laufzeit per JavaScript/AJAX nach. Traditionelle Crawler, die nur statisches HTML laden, überspringen diese Daten oft. Um dynamische Seiten vollständig zu erfassen, werden Techniken wie Headless-Browser (z.B. Puppeteer, Playwright oder Selenium) eingesetzt, die JavaScript ausführen und die Seite „vollständig“ rendern. Dadurch können auch Inhalte erfasst werden, die sonst übersehen würden.
+ <!-- Fällt nicht auch das Verarbeiten von Bilder/Videos in diese Kategorie? Oder ist das nochmal was anderes? Ich glaube das sollten wir auch ansprechen. -->
 
 ### Rate Limits
  Sowohl Crawler als auch Server setzen oft Crawling-Ratenbegrenzungen. Crawler implementieren daher Verzögerungen oder lesen in der robots.txt einen Crawl-Delay aus. Beispielsweise kann ein Crawler nach jeder Anfrage automatisch 200ms warten. Crawler4j z.B. nutzt seit Version 1.3 standardmäßig 200 ms Pause zwischen Anfragen. Wer zu schnell crawlt, riskiert, vom Server geblockt zu werden oder als Bot markiert zu werden.
 
-### Pay-per-Crawl
+### Pay-per-Crawl <!-- Warum erklärst du erst Pay-per-Crawl und sagst dann erst im nächsten Absatz wer das eingeführt hat? Besser andersherum als Unterpunkt -->
 Kommerzielle Anbieter ermöglichen Crawling „on demand“, bezahlt pro Crawl oder Datenvolumen.
 - Vorteile: Skalierbarkeit, geringere Wartung, robots.txt-Handling.
 - Nachteile: Kosten, eingeschränkte Kontrolle über Crawling-Strategie.
 - Beispiele: Zyte, Apify, SerpApi, Bright Data.
 
-### AI Crawler
+### AI Crawler 
+<!-- Vielleicht nochmal einen Satz ergänzen, was den AI-Crawler überhaupt auszeichnet. Ist irgendwie unklar, was der jetzt genau kann -->
 Cloudflare hat ein Feature namens Pay per Crawl eingeführt, Teil ihres AI Crawl Control-Produktes.
-Dabei Publisher können einen Preis pro erfolgreichem Crawl festlegen oder auch ggf. ablehnen. 
+Dabei Publisher können einen Preis pro erfolgreichem Crawl festlegen oder auch ggf. ablehnen. <!-- Satz unvollständig -->
 
 #### Vorteile
 - Monetarisierungsmöglichkeit für Content Owner  
-- Mehr Kontrolle 0über Zugriff durch AI-Crawler  
+- Mehr Kontrolle 0über <!-- Warum die "0" vor dem ü? --> Zugriff durch AI-Crawler  
 - Transparenz durch HTTP Status Codes und Preisauszeichnung  
 
 #### Herausforderungen
@@ -56,6 +59,7 @@ Dabei Publisher können einen Preis pro erfolgreichem Crawl festlegen oder auch 
 - Mindestpreis: $0,01 pro erfolgreichem Crawl 
 
 ## Mögliche Frameworks/Tools
+<!-- Auch hier einmal vor der Auflistung 1-2 Sätze was diese ganzen Tools im generellen machen. Also warum man die nutzt -->
 - Scrapy (Python): Weit verbreitetes Open-Source-Framework für Web-Crawling und -Scraping. Es ist schnell, flexibel und wird von einer großen Community gepflegt.
 - Crawler4j (Java): Einfacher Java-Crawler mit moderner API. Open Source, Multi-Thread-fähig und schnell einsetzbar.
 - Apache Nutch: Hochskalierbarer Java-Crawler auf Hadoop-Basis. Extrem anpassbar und für große Crawling-Jobs optimiert.
