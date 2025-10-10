@@ -32,7 +32,7 @@ Mehr Informationen zur Installation und Nutzung: https://github.com/radiantearth
 - Innerhalb der Kataloge kann durch Filter und Schlüsselwörter nach Geodaten gesucht werden.
 
 ## STAC-js
-STAC-js ist eine Libary für JS, die Funktionen und Klassen enthält, die die Interaktion mit STAC-Daten oder schreibgeschützten STAC-Objekten vereinfachen. STAC-js kann im Browser und in NodeJS genutzt werden. Die Funktionen sind allerdings nicht direkt auf Dateien oder Dateisysteme anwendbar. So kann STAC-js nicht zum Erstellen oder Updaten eines Katalogs genutzt werden. 
+STAC-js ist eine Libary für JS, die Funktionen und Klassen enthält, die die Interaktion mit STAC-Daten oder schreibgeschützten STAC-Objekten vereinfachen. STAC-js kann im Browser und in NodeJS genutzt werden. Die Funktionen sind allerdings nicht direkt auf Dateien oder Dateisysteme anwendbar. So kann STAC-js nicht zum Erstellen oder Updaten eines Katalogs genutzt werden. STAC-js ist eine Basis für weitere Packages.
 
 Es können einzelne Funktionen oder Klassen importiert werden.
 ```js
@@ -85,7 +85,11 @@ map.addLayer(stac)
 - Beispielmap, die eine Basemap und Sentinel 2 Daten enthält
 - Beispiele für eine index.html-Datei, eine main.js-Datei und eine package.json-Datei
 
+#### -> für Leaflet gibt es die Libary stac-layer
+
 ## Quellen
+- https://www.youtube.com/watch?v=16wryujzqd8
+- 
 - https://github.com/radiantearth/stac-browser?tab=readme-ov-file#stac-browser
 - https://radiantearth.github.io/stac-browser/#/?.language=de
 - https://marbleclimate.com/tutorials/users/catalog/gui-search.html
@@ -96,24 +100,4 @@ map.addLayer(stac)
 - https://github.com/moregeo-it/ol-stac
 - https://openlayers.org/en/latest/examples/stac-item.html
 - https://ol-stac.moregeo.it/doc/quickstart.html
-- 
-## Links zur Recherche:
-
-### STAC generell
-https://thejeshgn.com/2024/05/08/exploring-stac-datasets-with-browser/
-https://www.gdi.nrw/system/files/media/document/file/20231017_5_geoit_rt_einfuehrung-in-stac-und-stac-api-de_mohr.pdf
-
-### Tools generell
-https://stacindex.org/
-https://www.youtube.com/watch?v=16wryujzqd8
-
-### Browser
-amax.openstreetmap.fr/api/users/8684d422-df83-42a4-85ca-acc5be7bc357/catalog/?.language=de
-https://apps.thejeshgn.com/stac-browser/#/external/panor
-https://www.youtube.com/watch?v=16wryujzqd8 12:10
-
-### STAC-js
-https://www.youtube.com/watch?v=16wryujzqd8 4:06
-
-### OL-STAC
-https://av.tib.eu/media/68503
+- https://av.tib.eu/media/68503
