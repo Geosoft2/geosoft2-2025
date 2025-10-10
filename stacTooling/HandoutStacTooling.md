@@ -8,7 +8,7 @@ Lenja Fipper, @Lenja-fpr
 
 ...
 
-...
+Jonas Klaer, @BrokeJ
 
 ## Wichtige Tools
 - [STAC Browser](#stac-browser)
