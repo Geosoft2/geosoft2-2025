@@ -17,7 +17,85 @@ Modulare Architektur: Typische Komponenten sind eine URL-Frontier (Warteschlange
 
 Robustheit: Der Crawler muss fehlertolerant sein (z.B. gegen Abbruch durch ungültige URLs) und „Spider-Traps“ (seitenweise Endlosschleifen) erkennen und umgehen. <!-- Man könnte hier nochmal auf Tiefensuche und Breitensuche eingehen und auch über die maximale Tiefe von Crawlern reden um zu vermeiden, dass der Bot nicht in eine solche Endlosschleife rutscht.-->
 ## Strategien zur Indexierung
- TODO
+Indexierung verwandelt die beim Crawling gesammelten Rohdokumente in eine strukturierte, durchsuchbare Repräsentation. Während Crawling dokumentorientiert ist (Seite → Dokument), ist Indexierung term- bzw. feld-orientiert: Ziel ist, Anfragen (z. B. Stichwörter, Phrasen oder Filter) sehr schnell auf die relevanten Dokumente abzubilden. Das umfasst mehrere Teilschritte:
+
+- Dokumentaufbereitung: HTML-Boilerplate entfernen, Haupttext extrahieren, Metadaten (Titel, URL, Datum, Sprache) erfassen, und strukturierte Daten (Schema.org, JSON-LD) parsen.
+- Tokenisierung: Text in einzelne Terme (Wörter, Satzzeichen, Komponenten) zerlegen; dabei werden Regeln für Wortgrenzen, Unicode-Normalisierung und Sprachen berücksichtigt.
+- Normalisierung: Kleinschreibung, Unicode-Normalisierung (NFC/NFKC), Entfernen/Behandeln von Zeichen wie Akzenten.
+- Stopword-Filtering: Häufige Funktionswörter (z. B. "und", "der") entfernen oder heruntergewichten, um Indexgröße zu reduzieren und Rauschen zu verringern.
+- Stemming/Lemmatisierung: Wortstämme bilden (z. B. "lauf", "läuft" → "lauf") oder Lemmas verwenden, um Flexionen zusammenzufassen.
+- Term-Statistiken: Für Ranking und Gewichtung werden Häufigkeiten berechnet (Term Frequency, Document Frequency, TF-IDF, BM25-Signale).
+- Strukturierte Indizes erzeugen: Terme werden so abgelegt, dass Suchanfragen schnell die zugehörigen Dokument-IDs liefern (siehe unten).
+- Metadaten-/Feld-Indexierung: Titel, Header, URL, Seitentyp oder geographische Felder werden feldweise indexiert und können unterschiedlich gewichtet werden.
+
+Wichtige Datenstrukturen und Konzepte
+- Invertierter Index: Die zentrale Struktur der Volltextsuche. Für jeden Term (Wort) gibt es eine Posting-Liste mit Dokument-IDs, Positionen (für Phrasensuche) und optional Term-Frequenzen. Dies ermöglicht sehr schnelle Term→Dokument Abfragen.
+- Vorwärtsindex (Forward Index): Dokumentzentrierte Speicherung (z. B. Dokument → Termliste). Nützlich für Ranking-Berechnungen, schneller Zugriff auf Dokumentinhalte und für Wiederherstellung (snippet generation).
+- Postings-Optimierungen: Skip-Listen/-Punkte, Block- bzw. Delta-Codierung und Kompression (Variable-Byte, Elias-Gamma, PForDelta) reduzieren Speicherbedarf und beschleunigen Merge/Intersection von Posting-Listen.
+- Positional Index: Speichert Term-Positionen innerhalb eines Dokuments für genaue Phrasen- und Nähe-Suchen.
+
+Strategien bei der Indexierung (Übersicht und Trade-offs)
+
+1) Batch-Indexierung (periodisch)
+- Beschreibung: Dokumente werden gesammelt und als große Batches indexiert (z. B. nächtliche Jobs). Indexe werden in großen, optimierten Segmenten aufgebaut und dann zusammengeführt.
+- Vorteile: Sehr effizient bei Schreib-/Merge-Operationen, gute Kompression und Indexqualität.
+- Nachteile: Verzögerte Sichtbarkeit neuer Inhalte (Freshness-Latenz).
+
+2) Inkrementelle / Near-Real-Time (NRT) Indexierung
+- Beschreibung: Neue oder geänderte Dokumente werden kontinuierlich oder in kleinen Blöcken indexiert und schnell (Sekunden bis Minuten) verfügbar gemacht.
+- Vorteile: Geringe Latenz, geeignet für News/Feeds/Realtime-Anwendungen.
+- Nachteile: Höherer Overhead, mehr kleine Segmente → häufige Merges nötig, evtl. geringere Kompressionsrate.
+
+3) Streaming- / Event-getriebene Indexierung
+- Beschreibung: Änderungen werden per Event-Stream (z. B. Kafka) aufgenommen und direkt in Indexierer-Pipelines eingespeist.
+- Vorteile: Skalierbar, gut in verteilten Architekturen integrierbar, stark geeignet für Microservices.
+- Nachteile: Komplexere Fehlerbehandlung, genau-einmal-Verarbeitung ist schwieriger.
+
+4) Nearline / Hybrid-Strategien
+- Beschreibung: Kombination aus schnellen NRT-Indexierungen für wichtige Felder (Titel, Headline) und Batch-Verarbeitung für Volltext und Optimierung.
+- Vorteil: Guter Kompromiss zwischen Freshness und Effizienz.
+
+5) Feld- und gewichtete Indexierung
+- Beschreibung: Dokumente werden in Feldern (title, url, body, anchor_text, meta) indexiert. Treffer in bestimmten Feldern erhalten höhere Relevanz (z. B. Term im Title > Term im Body).
+- Einsatz: Ermöglicht feingranulare Ranking-Signale und facettierte Suche.
+
+6) Positions- und Phrase-Indexierung
+- Beschreibung: Speicherung der Term-Positionen für Phrasen- und Proximity-Queries.
+- Kosten: Erhöht Indexgröße, ist aber für präzise Suchergebnisse oft unerlässlich.
+
+7) Verteilte Indexierung (Sharding & Replication)
+- Beschreibung: Große Indizes werden horizontal geshardet (z. B. nach Term-Hash oder Dokument-IDs). Replikation sichert Verfügbarkeit und Lese-Performance.
+- Trade-offs: Balancing der Shards, Konsistenz vs. Verfügbarkeit, Netzwerklast bei Query Fan-out.
+
+8) Kompressions- und Speicherstrategien
+- Beschreibung: Kompression von Posting-Listen, use of columnar storage for term statistics, und Einsatz von SSTables oder segmentbasierten Stores zur schnellen Suche.
+- Effekt: Reduziert Speicherbedarf und I/O, kann aber CPU für Dekompression erfordern.
+
+9) Delta-Indexing, Merge-Strategien und Segmentverwaltung
+- Beschreibung: Kleine, häufige Schreibsegmente (delta) werden periodisch in größere, optimierte Segmente gemerged. Merge-Strategien beeinflussen Schreib-/Lese-Kosten und Frische.
+
+10) Ranking-Integration während Indexierung
+- Beschreibung: Vorberechnung von Signalen (z. B. PageRank, Domain-Authority, Dokument-Popularität) und Speicherung als Felder im Index.
+- Vorteil: Schnellere Query-Time-Ranking, weniger Laufzeit-Berechnungen.
+
+11) Duplikat- und Near-Duplicate-Erkennung
+- Beschreibung: Hash-basierte Signaturen (z. B. MinHash, SimHash) oder Shingling, um sehr ähnliche/identische Dokumente zu erkennen und Duplikate zu de-priorisieren oder zu clustern.
+
+12) Multilingual- und Medien-Indexierung
+- Beschreibung: Sprache erkennen, sprachspezifische Tokenizer/Stemmer verwenden; für Bilder/Video/Audio Metadaten, Tags, extrahierte Text (OCR), und embeddings indexieren.
+
+13) Semantische Indexierung (Embeddings)
+- Beschreibung: Neuronale Repräsentationen (Sentence-/Document-Embeddings) werden zusammen mit klassischen Indizes gespeichert oder in ANN-Indizes (Approximate Nearest Neighbors) ausgelagert.
+- Einsatz: Verbesserte semantische Suche und ähnliche Dokument-Suche. Trade-off: höherer Speicherbedarf und andere Antwortzeiten.
+
+Operational Considerations / Praktische Tipps
+- Freshness vs. Throughput: Wähle Batch für Durchsatz, NRT/Streaming für Freshness.
+- Speicher vs. Query-Latenz: Aggressive Kompression spart Platz, kann aber CPU bei Abfragen erhöhen.
+- Monitoring: Index-Size, Segmentanzahl, Merge-Kosten, Query-Latenz und Fehler bei Index-Feeds regelmäßig überwachen.
+- Testing: Relevanztests, A/B-Tests und synthetische Lasttests helfen, Indexierungsentscheidungen zu validieren.
+
+Zusammenfassung
+Indexierung ist mehr als "Wörter speichern": Es ist ein ganzes Ökosystem aus Textaufbereitung, datenstruktureller Gestaltung, Kompressions- und Verteilungsentscheidungen sowie Operationalisierung für Freshness und Skalierung. Die beste Strategie hängt von Anforderungen (Echtzeitbedarf, Speicher, Relevanzqualität) ab; häufig ist ein Hybridansatz (z. B. schneller NRT-Index für Headlines + Batch-Merges für Volltext) der praktischste Kompromiss.
 ## Herausforderungen
 ### Skalierung
  Das Web wächst ständig. Historisch mussten Suchmaschinen bereits in den 1990er Jahren ununterbrochen zusätzliche Hardware für Crawling und Indexierung bereitstellen, da sich die Zahl der Seiten alle paar Monate verdoppelte. Moderne Crawler setzen auf verteilte Architekturen (z.B. Apache Nutch auf Hadoop) und parallele Prozesse, um Milliarden von Seiten zu verarbeiten.
