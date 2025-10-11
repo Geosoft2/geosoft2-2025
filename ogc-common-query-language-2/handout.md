@@ -9,6 +9,20 @@
 
 ## 3. Syntaxvarianten (Text vs JSON)
 
+### Text-Encoding
+
+- Menschlich lesbare Syntax (ähnelt SQL)
+- Kompakt & gut für URL-Parameter geeignet
+- Unterstützt logische, räumliche & zeitliche Filter
+- Wird von OGC API - Features, Records & STAC unterstützt
+
+### JSON-Encoding
+
+- Maschinenlesbar (JSON-Struktur)
+- Ideal für Web-APOs und zur Programmierung
+- Besser validierbar & einfacher zu parsen
+- Gleiche Logik wie Text-Encoding
+
 ## 4. Operatorenüberblick
 
 ## 5. Beispiel-Filter (Text + JSON)
