@@ -70,4 +70,37 @@
 
 ## 6. Anwendung in STAC & OGC API
 
+### STAC
+
+- STAC = SpatioTemporal Asset Catalog  
+    API zum Durchsuchen und Filtern georäumlicher Sammlungen
+- Unterstützt CQL2 zur präzisen Suche nach Items
+- Formate für Filter:  
+    Text-Encoding: einfach in GET-Requests
+    JSON-Encoding: komplexere Filter per POST    
+- Beispiel:  
+    GET /collections/satellite_data/items?filter-lang=cql2-text&filter=cloudcover<10
+
+    POST /search  
+    ```json
+    {
+      "filter-lang": "cql2-json",
+      "filter": {
+        "op": "<",
+        "args": [
+          {"property": "cloudcover"},
+          10
+        ]
+      }
+    }
+    ```
+
+### OGC API
+
+- OGC API = REST-basierter Standard des Open Geospatial Consortium (OGC)
+- Nutz dieselbe CQL2-Syntax für Filterparameter
+- Filter werden bei POST-Requests im JSON-Body übergeben
+- Ermöglicht strukturierte Abfragen auf Feature-Daten
+- Gleiche Syntax -> kompatibel zwischen OGC API & STAC API
+
 ## 7. Fazit
