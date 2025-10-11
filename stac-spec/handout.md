@@ -18,8 +18,6 @@ STAC stellt sicher, dass raum-zeitliche Assets leicht auffindbar, zugänglich un
 
 ## STAC-Komponenten
 
----
-
 ### Strukturelle Komponenten
 
 Die STAC-Spezifikation besteht aus 3 zentralen Komponenten. Jede Komponente kann einzeln benutzt werden, aber sie funktionieren am sinnvollsten zusammen.
@@ -149,7 +147,10 @@ Er ermöglicht die Navigation innerhalb der STAC-Struktur und beschreibt die log
 
 *Weitere Informationen:* [links](https://github.com/radiantearth/stac-spec/blob/master/commons/links.md)
 
----
+
+## STAC-Hierarchie 
+
+![STAC Hierarchie](stac-hierarchy.png)
 
 ## STAC-Erweiterungen (Extensions)
 
@@ -175,18 +176,6 @@ Verwendung:
 
 *Weitere Informationen:* [extensions](https://github.com/radiantearth/stac-spec/tree/master/extensions)
 
-## STAC-Hierarchie
-
-```text
-Catalog
-├── Collection: sentinel-2-l2a
-│   ├── Item: S2A_20250815T103031_L2A_34UFS
-│   │   ├── Asset: B02.tif
-│   │   ├── Asset: B04.tif
-│   │   └── Asset: thumbnail.jpg
-```
-
----
 
 ## Beispiel
 
