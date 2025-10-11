@@ -1,5 +1,5 @@
-@luis-waldi  
-@nils-gb156
+[@luis-waldi](https://github.com/luis-waldi)  
+[@nils-gb156](https://github.com/nils-gb156)  
 
 # OGC Common Query Language 2 (CQL2) (#7)
 
@@ -24,6 +24,28 @@
 - Gleiche Logik wie Text-Encoding
 
 ## 4. Operatorenüberblick
+
+### Vergleichoperatoren
+
+- `=`, `<>`, `<`, `>`, `BETWEEN`, `LIKE`, `IN`
+- Vergleich von Attributen & Werten
+
+### Logische Operatoren
+
+- `AND`, `OR`, `NOT`
+- Kombinieren von Bedingungen
+
+### Räumliche Operatoren
+
+- `S_INTERSECTS`, `S_CONTAINS`, `S_CROSSES`, `S_DISJOINT`, `S_EQUALS`, `S_OVERLEAPS`, `S_TOUCHES`, `S_WITHIN`
+- Beziehungen zwischen Geometrien
+
+### Zeitliche Operatoren
+
+- `T_BEFORE`, `T_AFTER`, `T_DURING`, `T_EQUALS`, …
+- Vergleich zeitlicher Eigenschaften
+
+>Jeder Ausdruck wertet entweder als `true`, `false` oder `null` aus.
 
 ## 5. Beispiel-Filter (Text + JSON)
 
