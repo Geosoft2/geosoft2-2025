@@ -1,6 +1,7 @@
 # STAC – SpatioTemporal Asset Catalog
 
-Bearbeitet von: @HannahS-T & @vertrox78
+**Kurs:** Geosoftware II, Wintersemester 2025/26  
+**Bearbeitet von:** Hannah Schulte-Terboven (@HannahS-T) & Jan Jakob Wotka (@vertrox78)  
 
 ## Überblick
 
@@ -14,7 +15,6 @@ STAC (SpatioTemporal Asset Catalog) ist ein offener Standard zur Beschreibung, K
 - Unterstützt sowohl statische Kataloge als auch dynamische STAC-APIs
 
 STAC stellt sicher, dass raum-zeitliche Assets leicht auffindbar, zugänglich und wiederverwendbar sind – unabhängig vom Speicherort.
-
 
 ## STAC-Komponenten
 
@@ -78,7 +78,7 @@ Eine Collection kann sowohl übergeordnete (parent) Catalog- oder Collection-Obj
 | summaries | Optional: Zusammenfassungen von Eigentschaften der enthaltenen Items             |
 | weitere Felder | ... |
 
-*Weitere Informationen: [collection-spec](https://github.com/radiantearth/stac-spec/tree/master/collection-spec)*
+*Weitere Informationen:* [collection-spec](https://github.com/radiantearth/stac-spec/tree/master/collection-spec)
 
 ---
 
@@ -87,7 +87,7 @@ Legt fest, wie andere STAC-Objekte (z. B. Collections oder weitere Catalogs) ver
 Er ist vergleichbar mit einem Ordner in einer Dateistruktur und dient der Organisation und Navigation innerhalb der STAC-Daten.
 
 Ziele:
-1. Große Collections unterteilen, um sie übersichtlicher zu machen (z. B. nach Geografie oder Zeit).​
+1. Große Collections unterteilen, um sie übersichtlicher zu machen (z. B. nach Geografie oder Zeit)​
 2. Mehrere Collections zusammenfassen, um eine übergeordnete Übersicht zu schaffen (z. B. als Einstiegspunkt in verschiedene Datensätze)​
 
 **Felder:**
@@ -102,7 +102,7 @@ Ziele:
 | title | Optional: kurzer Titel des Katalogs              |
 |weitere Felder | ... |
 
-*Weitere Informationen: [catalog-spec](https://github.com/radiantearth/stac-spec/tree/master/catalog-spec)*
+*Weitere Informationen:* [catalog-spec](https://github.com/radiantearth/stac-spec/tree/master/catalog-spec)
 
 ---
 
@@ -176,7 +176,6 @@ Verwendung:
 
 *Weitere Informationen:* [extensions](https://github.com/radiantearth/stac-spec/tree/master/extensions)
 
-
 ## Beispiel
 
 ---
@@ -201,14 +200,7 @@ Offener Standard mit breiter Community und Tool-Unterstützung
 
 ---
 
-## Tools & Ressourcen
-
-STAC Spezifikation: https://github.com/radiantearth/stac-spec
-
-Copernicus STAC API: https://stac.dataspace.copernicus.eu
-
-STAC Browser (GUI): https://github.com/radiantearth/stac-browser
-
-Python-Bibliothek: https://pystac.readthedocs.io
-
-QGIS STAC Plugin: https://stac-utils.github.io/qgis-stac-plugin/
+## Quellen
+- STAC Spec Repository auf GitHub: https://github.com/radiantearth/stac-spec
+- STAC Specification: https://stacspec.org/en
+- EO College – The STAC Catalog: https://eo-college.org/topics/the-stac-catalog/
