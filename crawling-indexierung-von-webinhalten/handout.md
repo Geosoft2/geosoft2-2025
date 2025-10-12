@@ -24,14 +24,85 @@ Robustheit: Der Crawler muss fehlertolerant sein (z.B. gegen Abbruch durch ungü
 ## Indexierung
 Indexierung verwandelt die beim Crawling gesammelten Rohdokumente in eine strukturierte, durchsuchbare Repräsentation. Während Crawling dokumentorientiert ist (Seite → Dokument), ist Indexierung term- bzw. feld-orientiert: Ziel ist, Anfragen (z. B. Stichwörter, Phrasen oder Filter) sehr schnell auf die relevanten Dokumente abzubilden. Das umfasst mehrere Teilschritte:
 
-- Dokumentaufbereitung: HTML-Boilerplate entfernen, Haupttext extrahieren, Metadaten (Titel, URL, Datum, Sprache) erfassen, und strukturierte Daten (Schema.org, JSON-LD) parsen.
-- Tokenisierung: Text in einzelne Terme (Wörter, Satzzeichen, Komponenten) zerlegen; dabei werden Regeln für Wortgrenzen, Unicode-Normalisierung und Sprachen berücksichtigt.
-- Normalisierung: Kleinschreibung, Unicode-Normalisierung (NFC/NFKC), Entfernen/Behandeln von Zeichen wie Akzenten.
-- Stopword-Filtering: Häufige Funktionswörter (z. B. "und", "der") entfernen oder heruntergewichten, um Indexgröße zu reduzieren und Rauschen zu verringern. <!-- Bischen wired beschrieben. -->
-- Stemming/Lemmatisierung: Wörter auf Wortstämme reduzieren (z. B. "lauf", "läuft", "laufen") oder Lemmas verwenden, um Wortfamilien zusammenzufassen.
-- Term-Statistiken: Für Ranking und Gewichtung werden Häufigkeiten berechnet (Term Frequency, Document Frequency, TF-IDF, BM25-Signale).
-- Strukturierte Indizes erzeugen: Terme werden so abgelegt, dass Suchanfragen schnell die zugehörigen Dokument-IDs liefern (siehe unten).
-- Metadaten-/Feld-Indexierung: Titel, Header, URL oder Seitentyp werden feldweise indexiert und können unterschiedlich gewichtet werden.
+#### Schritte der Indexierung
+Die Indexierung besteht aus einer Reihe aufeinanderfolgender (und teilweise iterativer) Schritte. Jeder Schritt hat eigene Design‑Entscheidungen, Fehlerfälle und Performance‑Auswirkungen. Im Folgenden eine ausführliche Aufschlüsselung, wie ein Produktions‑Indexierprozess typischerweise aussieht.
+
+1) Dokumentaufnahme & Vorverarbeitung
+- Herkunft: Eingehende Rohdokumente kommen vom Crawler, aus Feeds, APIs oder manuellen Uploads. Zuerst werden Inhalte in ein Zwischenformat (z. B. JSON) überführt.
+- Aufgaben: Erkennen des MIME‑Typs (text/html, application/pdf, image/*), Extraktion von Text (HTML-Parsing, PDF‑Parser, OCR für Bilder), Erfassung von Metadaten (URL, HTTP‑Header, Last‑Modified, Content‑Language) und Erfassen strukturierter Daten (Schema.org, JSON‑LD, microdata).
+- Fehlerfälle: fehlerhafte Encodings, kaputte PDFs, fehlende Metadaten — solche Dokumente werden markiert, evtl. quarantänisiert oder mit Fallback‑Strategien weiterverarbeitet.
+
+2) Boilerplate‑Entfernung & Haupttext‑Extraktion
+- Ziel: Entfernen von Navigationsleisten, Cookie‑Hinweisen, Footer, Sidebars, damit nur der relevante Inhaltskern indexiert wird.
+- Techniken: DOM‑Heuristiken, Text‑Density‑Algorithmen (z. B. Boilerpipe), CSS‑Selector‑Regeln oder ML‑basierte Klassifikatoren.
+- Trade‑offs: Aggressives Entfernen spart Indexplatz, kann aber wichtige kontextuelle Informationen (z. B. Captions) verlieren.
+
+3) Spracherkennung & Zeichensatz‑Normalisierung
+- Erkennung der Sprache (language detection) zur Auswahl sprachspezifischer Tokenizer/stemmers und korrekter Sortierung.
+- Unicode‑Normalisierung (NFC/NFKC), Vereinheitlichung von Whitespace, Entfernen oder Normieren von nicht‑druckbaren Zeichen.
+
+4) Tokenisierung
+- Zerlegung des Textes in Terme (Tokens). Das umfasst Wortgrenzen, Nummernerkennung, Umgang mit Bindestrichen, URLs, E‑Mail‑Adressen sowie sprachspezifische Regeln (z. B. Zusammensetzungen im Deutschen).
+- Beispiele: "2024-05-01", "E‑Mail@example.com", Hashtags/Handles werden oft als eigene Token behandelt.
+
+5) Normalisierung & Filtern
+- Kleinschreibung (lowercasing), Entfernen von Satzzeichen (oder Beibehalten, falls relevant), Normalisierung von Akzenten je nach Sprache.
+- Stopword‑Filtering: Entfernen oder Heruntergewichten häufiger Funktionswörter (z. B. "und", "the"). Manche Systeme verzichten auf Stopword‑Removal zugunsten kontextueller Features.
+
+6) Stemming / Lemmatisierung und Wortformenbehandlung
+- Stemming (z. B. Porter, Snowball) reduziert Wörter auf einen Stamm; Lemmatisierung liefert das korrekte Lemma mithilfe linguistischer Regeln bzw. POS‑Tagging. <!-- Bisschen detailierter erklären -->
+- Entscheidung: Stemming ist schneller, Lemmatisierung genauer (benötigt ggf. POS‑Tagger und Wörterbücher).
+<!-- Beispiel geben -->
+
+7) Normalisierung von Zahlen, Datumsangaben und Einheiten
+- Extraktion und Normalisierung von numerischen Entitäten (Preise, Datumsangaben, Maßeinheiten) in maschinenlesbare Formen (z. B. ISO‑Datum), um Filter/Facetten zu ermöglichen.
+
+8) Erkennung strukturierter Entitäten & Features
+- Named Entity Recognition (Personen, Orte, Organisationen), Erkennung von Tags, Kategorien, Autorennamen, Geo‑Koordinaten.
+- Extraktion von zusätzlichen Signalen: Titel‑Position, Überschriften (H1/H2), Link‑Ankertext‑Vorkommen, Dateigröße — diese werden später als Ranking‑Features gespeichert.
+
+9) Shingling / n‑gramme / Phrase‑Erkennung
+- Bildung von Token‑Ngrams oder Shingles (z. B. für Near‑Duplicate‑Detection mit MinHash) und zur Unterstützung von Phrase‑Queries. <!-- Zu komplex? -->
+
+10) Term‑Statistiken & Signale berechnen
+- Berechnung von Term Frequency (TF), Document Frequency (DF), Dokument‑Länge, Inverse Document Frequency (IDF) oder Vorverarbeitung für BM25‑Parameter. Manche Systeme berechnen zusätzlich PageRank‑artige Signale oder Popularitätsmetriken vor dem Speichern. <!-- Beispiel geben -->
+
+11) Feld‑ und Metadaten‑Mapping
+- Zuweisung von Termen zu Feldern (title, body, url, anchor_text, tags, geo). Felder ermöglichen unterschiedliche Gewichtungen und facettierte Suche.
+
+12) Erstellen der Indexeinträge (Posting‑Erzeugung)
+- Invertierter Index: Für jeden Term werden Postings erzeugt (docID, Term‑Frequenz, Positionen, optional Payloads wie boost‑Werte oder Field‑IDs).
+- Vorwärtsindex: Optionales Speichern von Dokument → Termliste / Feature‑Vektor für Ranking‑Berechnungen und Snippet‑Generierung.
+
+13) Kompression & Speicherformat
+- Anwendung von Delta‑Codierung, Variable‑Byte‑Encoding oder Block‑Kompression auf Posting‑Listen; Speicherung in segmentbasierten Dateien (z. B. Lucene‑Segmente, SSTables).
+- Trade‑offs: Bessere Kompression reduziert I/O, erhöht aber CPU‑Nutzung bei Dekompression.
+
+14) Segmentierung, Commit & Merge‑Strategien
+- Indexe werden in Segmenten geschrieben. Kleine Segmente vereinfachen Schnappschuss‑Commits und NRT, große Segmente sind lesefreundlicher.
+- Merge‑Strategien (tiered, logarithmic) entscheiden, wann kleine Segmente in größere zusammengeführt werden — beeinflusst Write‑Amplification und Suchperformance.
+
+15) Update / Delete / Versionierung
+- Updates: Meist implementiert als "delete + add" oder durch Versionskennzeichnung (soft deletes). Konsistente Sicht für Suchenden wird durch atomare Commits / snapshots gewährleistet.
+- Löschungen: Soft deletes werden häufig genutzt, um teure Rewrites zu vermeiden und Reindexing zu verzögern.
+
+16) Snippet‑Erzeugung & Highlighting
+- Speichern oder Wiederherstellen relevanter Textausschnitte (Vorwärtsindex oder stored fields) für Suchergebnis‑Snippets und Highlighting.
+
+17) Qualitätsprüfungen, Tests & Monitoring
+- Relevance‑Tests (kann manuell oder per A/B‑Testing erfolgen), Index‑Konsistenzprüfungen, Validierung auf fehlende/kaputte Dokumente.
+- Metriken: Index‑Size, Segmentanzahl, Merge‑Kosten, Index‑Durchsatz, Query‑Latenz, Fehlerquoten.
+
+18) Produktionale Betriebsaspekte
+- Backpressure: Beim Einspielen großer Mengen sind Queues und Rate‑Limits wichtig.
+- Idempotenz: Event‑Verarbeitung sollte idempotent sein, um Doppelerfassungen zu vermeiden.
+- Recovery: Snapshots, Replikate und Reindex‑Pipelines zur Wiederherstellung.
+
+19) Erweiterungen: Multimodal & Semantische Indexe
+- Für Bilder/Audio/Video: Extrahierte Metadaten, OCR/Text‑Transkripte, und ggf. Embeddings werden ergänzt.
+- Embeddings: Speicherung von Sentence/Document‑Embeddings in ANN‑Index für semantische Suche oder Hybrid‑Ansätze (BM25 + ANN rerank).
+
+Zusammenfassend ist Indexierung eine mehrstufige Pipeline mit vielen optionalen Komponenten. Jede Stufe bietet Gestaltungsspielraum: schnell und grob vs. langsam und präzise, platzsparend vs. reich an zusätzlichen Ranking‑Features. Für Lehrzwecke empfiehlt sich, die Pipeline schrittweise aufzubauen (zuerst einfacher inverted index, dann Positionen, Felder, und schließlich Kompression/Distributed‑Aspekte).
 
 #### Wichtige Datenstrukturen und Konzepte
 - Invertierter Index: Die zentrale Struktur der Volltextsuche. Für jeden Term (Wort) gibt es eine Posting-Liste mit Dokument-IDs, Positionen (für Phrasensuche) und optional Term-Frequenzen. Dies ermöglicht sehr schnelle Term -> Dokument Abfragen.
