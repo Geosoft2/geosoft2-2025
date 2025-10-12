@@ -5,7 +5,34 @@
 
 ## 1. Einstieg & Motivation
 
+### Warum brauchen wir CQL2?
+
+- Filtern ist zentrale Operation zur Auswahl von Teilmengen
+- Alte OGC-Standards (Filter Encoding, CQL 1) sind komplex, XML-basiert, schwer erweiterbar
+- CQL2 als einheitliche, moderne Filtersprache für OGC-APIs
+- Zwei Varianten: Text-Encoding & JSON-Encoding
+- Formalisierte Weiterentwicklung der ursprünglichen Common Query Language
+- Offizieller OGC-Standard (Version 1.0.0, 2024)
+
+### Ziele von CQL2
+
+- Interoperable & verständliche Filterausdrücke
+- Ergebnis pro Objekt: TRUE / FALSE / NULL (nur TRUE im Resultset)
+- Text-Encoding für HTTP GET (?filter=...)
+- JSON-Encoding für HTTP POST (Request-Body)
+- Formale Definition: BNF (Text) & JSON Schema (JSON)
+- Modularer Aufbau mit Requirements Classes:
+  Basic, Advanced Comparisons, Spatial, Temporal, Arrays, Functions
+
 ## 2. Was ist CQL2?
+
+- OGC-Standard zur Formulierung boolescher Filter für räumlich-zeitliche Daten
+- Unterstützt Vergleichs-, räumliche, zeitliche & logische Operatoren
+- Zwei interoperable Encodings: cql2-text & cql2-json
+- Typische Anwendung: Auswahl von Ressourcen in Query-Operationen
+- (z. B. OGC API – Features oder STAC-Suche)
+- Auch nutzbar für andere Operationen (z. B. Filter bei Updates)
+- Revision der ursprünglichen CQL aus dem Catalogue Service erstmals formal spezifiziert
 
 ## 3. Syntaxvarianten (Text vs JSON)
 
