@@ -1,41 +1,129 @@
 # Crawling und Indexierung von Webinhalten
-## Grundprinzipien von Crawlern
-Ein Web-Crawler (auch Spider oder Bot) ist ein Programm, das systematisch Webseiten besucht, um deren Inhalte zu sammeln und zu indizieren. Er startet mit einer Liste von Start-URLs (Seed-URLs), lädt eine Seite herunter, extrahiert den Text und alle darin enthaltenen Links und fügt diese neuen Links der Warteschlange (Frontier) hinzu. \
-Anschließend wird die nächste URL aus der Frontier abgearbeitet. Dieser Prozess setzt sich fort, bis alle relevanten Seiten erfasst sind oder eine Abbruchbedingung erreicht wird.
+## Crawling und Indexierung - Wofür?
+Stellt dir das Web wie eine riesige Bibliothek ohne Ordnung und Struktur da: unzählige „Bücher“ (Webseiten), ständig neue Regale, dauernd Umbauten. Crawling ist das systematische „Durch-die-Regale-Gehen“. Ein Crawler startet mit ein paar bekannten Adressen (Seeds), lädt die Seite, liest Titel und Text, sammelt weitere Links wie Hinweise auf weitere Regale und packt die neue Adressen auf eine Warteliste. Dabei verhält er sich höflich indem er die robots.txt (Hausordnung der Website) respektiert. Das Ergebnis des Crawlings ist kein fertiges Suchsystem, sondern ein stetig wachsender Stapel von Dokumenten plus Metadaten (URL, Zeitpunkt, Sprache, evtl. letzte Änderung).
 
-Ablauf eines Crawlers: Start mit Seed-URLs → Seite abrufen (HTTP-Request) → Seite parsen → Text indizieren und Links extrahieren → neue Links zur Frontier hinzufügen
+Indexierung baut daraus das eigentliche Suchsystem. Texte werden aufgeräumt (Boilerplate weg, Haupttext behalten), in Wörter zerlegt und in einen Index eingetragen: Für jedes Wort wird gespeichert, in welchen Dokumenten es vorkommt. So lässt sich später eine Suchanfrage sofort auf passende Dokumente abbilden. Zusätzlich merkt sich das System Kontext wie Titel, Datum oder ein kurzer Auszug, um Ergebnisse sinnvoll zu sortieren und anzuzeigen. Die einzelnen Wörter bekommen dann Gewichtung. Häufige Füllwörter zählen weniger, seltene, thematisch treffende Begriffe mehr. Aktualität oder Vorkommen im Titel, anstatt im Text, können das Ranking weiter verbessern. Weil sich das Web ständig ändert, wird der Index inkrementell aktualisiert: neue Seiten kommen dazu, geänderte werden ersetzt, veraltete seltener besucht.
+
+Wofür braucht man das? Von großen Web-Suchmaschinen über Nachrichtenseiten bis zu Intranet-Suchen in Unternehmen — überall, wo viele Dokumente schnell und zuverlässig auffindbar sein sollen. Kurz: **Crawling sammelt, Indexierung ordnet**. Zusammen verwandeln sie die chaotische Bibliothek „Web“ in ein effizientes Nachschlagewerk.
+
+## Grundprinzipien von Crawlern
+Ein Web-Crawler (auch Spider oder Bot genannt) ist ein Programm, das systematisch Webseiten besucht, um deren Inhalte zu sammeln und zu indizieren. Er startet mit einer Liste von Start-URLs (Seed-URLs), lädt eine Seite herunter, extrahiert den Text und alle darin enthaltenen Links und fügt diese neuen Links der Warteschlange (Frontier) hinzu. \
+Anschließend wird die nächste URL aus der Frontier abgearbeitet. Dieser Prozess setzt sich fort, bis alle relevanten Seiten erfasst sind oder eine Abbruchbedingung erreicht wird.
+<!-- Gerne noch ein zwei Sätze darüber verlieren, wie die Warteschlange aufgebaut ist. Welche Arten von Priorisierungen in der Warteschlange gibt es? -->
+
+Ablauf eines Crawlers: Start mit Seed-URLs → Seite abrufen (HTTP-Request) → Seite parsen → Text indizieren und Links extrahieren → neue Links zur Frontier hinzufügen <!-- 1. Das ganze vielleicht in eine nummierte Liste (also 1., 2.,... 6. überführen und dann am Ende nochmal verdeutlichen, dass der Prozess iterativ ist und wieder von Vorne beginnt. Man könnte auch zu jedem Schritt ruhig 1-2 Sätze schreiben, die ggf. verdeutlichen, was da passiert) -->
 
 Modulare Architektur: Typische Komponenten sind eine URL-Frontier (Warteschlange), ein DNS/HTTP-Fetch-Modul, ein Parser (für HTML/Links), eine Duplikaterkennung und ein Indexierer.
 
-Robustheit: Der Crawler muss fehlertolerant sein (z.B. gegen Abbruch durch ungültige URLs) und „Spider-Traps“ (seitenweise Endlosschleifen) erkennen und umgehen.
+Robustheit: Der Crawler muss fehlertolerant sein (z.B. gegen Abbruch durch ungültige URLs) und „Spider-Traps“ (seitenweise Endlosschleifen) erkennen und umgehen. <!-- Man könnte hier nochmal auf Tiefensuche und Breitensuche eingehen und auch über die maximale Tiefe von Crawlern reden um zu vermeiden, dass der Bot nicht in eine solche Endlosschleife rutscht.-->
 ## Strategien zur Indexierung
- TODO
+Indexierung verwandelt die beim Crawling gesammelten Rohdokumente in eine strukturierte, durchsuchbare Repräsentation. Während Crawling dokumentorientiert ist (Seite → Dokument), ist Indexierung term- bzw. feld-orientiert: Ziel ist, Anfragen (z. B. Stichwörter, Phrasen oder Filter) sehr schnell auf die relevanten Dokumente abzubilden. Das umfasst mehrere Teilschritte:
+
+- Dokumentaufbereitung: HTML-Boilerplate entfernen, Haupttext extrahieren, Metadaten (Titel, URL, Datum, Sprache) erfassen, und strukturierte Daten (Schema.org, JSON-LD) parsen.
+- Tokenisierung: Text in einzelne Terme (Wörter, Satzzeichen, Komponenten) zerlegen; dabei werden Regeln für Wortgrenzen, Unicode-Normalisierung und Sprachen berücksichtigt.
+- Normalisierung: Kleinschreibung, Unicode-Normalisierung (NFC/NFKC), Entfernen/Behandeln von Zeichen wie Akzenten.
+- Stopword-Filtering: Häufige Funktionswörter (z. B. "und", "der") entfernen oder heruntergewichten, um Indexgröße zu reduzieren und Rauschen zu verringern.
+- Stemming/Lemmatisierung: Wortstämme bilden (z. B. "lauf", "läuft" → "lauf") oder Lemmas verwenden, um Flexionen zusammenzufassen.
+- Term-Statistiken: Für Ranking und Gewichtung werden Häufigkeiten berechnet (Term Frequency, Document Frequency, TF-IDF, BM25-Signale).
+- Strukturierte Indizes erzeugen: Terme werden so abgelegt, dass Suchanfragen schnell die zugehörigen Dokument-IDs liefern (siehe unten).
+- Metadaten-/Feld-Indexierung: Titel, Header, URL, Seitentyp oder geographische Felder werden feldweise indexiert und können unterschiedlich gewichtet werden.
+
+Wichtige Datenstrukturen und Konzepte
+- Invertierter Index: Die zentrale Struktur der Volltextsuche. Für jeden Term (Wort) gibt es eine Posting-Liste mit Dokument-IDs, Positionen (für Phrasensuche) und optional Term-Frequenzen. Dies ermöglicht sehr schnelle Term→Dokument Abfragen.
+- Vorwärtsindex (Forward Index): Dokumentzentrierte Speicherung (z. B. Dokument → Termliste). Nützlich für Ranking-Berechnungen, schneller Zugriff auf Dokumentinhalte und für Wiederherstellung (snippet generation).
+- Postings-Optimierungen: Skip-Listen/-Punkte, Block- bzw. Delta-Codierung und Kompression (Variable-Byte, Elias-Gamma, PForDelta) reduzieren Speicherbedarf und beschleunigen Merge/Intersection von Posting-Listen.
+- Positional Index: Speichert Term-Positionen innerhalb eines Dokuments für genaue Phrasen- und Nähe-Suchen.
+
+Strategien bei der Indexierung (Übersicht und Trade-offs)
+
+1) Batch-Indexierung (periodisch)
+- Beschreibung: Dokumente werden gesammelt und als große Batches indexiert (z. B. nächtliche Jobs). Indexe werden in großen, optimierten Segmenten aufgebaut und dann zusammengeführt.
+- Vorteile: Sehr effizient bei Schreib-/Merge-Operationen, gute Kompression und Indexqualität.
+- Nachteile: Verzögerte Sichtbarkeit neuer Inhalte (Freshness-Latenz).
+
+2) Inkrementelle / Near-Real-Time (NRT) Indexierung
+- Beschreibung: Neue oder geänderte Dokumente werden kontinuierlich oder in kleinen Blöcken indexiert und schnell (Sekunden bis Minuten) verfügbar gemacht.
+- Vorteile: Geringe Latenz, geeignet für News/Feeds/Realtime-Anwendungen.
+- Nachteile: Höherer Overhead, mehr kleine Segmente → häufige Merges nötig, evtl. geringere Kompressionsrate.
+
+3) Streaming- / Event-getriebene Indexierung
+- Beschreibung: Änderungen werden per Event-Stream (z. B. Kafka) aufgenommen und direkt in Indexierer-Pipelines eingespeist.
+- Vorteile: Skalierbar, gut in verteilten Architekturen integrierbar, stark geeignet für Microservices.
+- Nachteile: Komplexere Fehlerbehandlung, genau-einmal-Verarbeitung ist schwieriger.
+
+4) Nearline / Hybrid-Strategien
+- Beschreibung: Kombination aus schnellen NRT-Indexierungen für wichtige Felder (Titel, Headline) und Batch-Verarbeitung für Volltext und Optimierung.
+- Vorteil: Guter Kompromiss zwischen Freshness und Effizienz.
+
+5) Feld- und gewichtete Indexierung
+- Beschreibung: Dokumente werden in Feldern (title, url, body, anchor_text, meta) indexiert. Treffer in bestimmten Feldern erhalten höhere Relevanz (z. B. Term im Title > Term im Body).
+- Einsatz: Ermöglicht feingranulare Ranking-Signale und facettierte Suche.
+
+6) Positions- und Phrase-Indexierung
+- Beschreibung: Speicherung der Term-Positionen für Phrasen- und Proximity-Queries.
+- Kosten: Erhöht Indexgröße, ist aber für präzise Suchergebnisse oft unerlässlich.
+
+7) Verteilte Indexierung (Sharding & Replication)
+- Beschreibung: Große Indizes werden horizontal geshardet (z. B. nach Term-Hash oder Dokument-IDs). Replikation sichert Verfügbarkeit und Lese-Performance.
+- Trade-offs: Balancing der Shards, Konsistenz vs. Verfügbarkeit, Netzwerklast bei Query Fan-out.
+
+8) Kompressions- und Speicherstrategien
+- Beschreibung: Kompression von Posting-Listen, use of columnar storage for term statistics, und Einsatz von SSTables oder segmentbasierten Stores zur schnellen Suche.
+- Effekt: Reduziert Speicherbedarf und I/O, kann aber CPU für Dekompression erfordern.
+
+9) Delta-Indexing, Merge-Strategien und Segmentverwaltung
+- Beschreibung: Kleine, häufige Schreibsegmente (delta) werden periodisch in größere, optimierte Segmente gemerged. Merge-Strategien beeinflussen Schreib-/Lese-Kosten und Frische.
+
+10) Ranking-Integration während Indexierung
+- Beschreibung: Vorberechnung von Signalen (z. B. PageRank, Domain-Authority, Dokument-Popularität) und Speicherung als Felder im Index.
+- Vorteil: Schnellere Query-Time-Ranking, weniger Laufzeit-Berechnungen.
+
+11) Duplikat- und Near-Duplicate-Erkennung
+- Beschreibung: Hash-basierte Signaturen (z. B. MinHash, SimHash) oder Shingling, um sehr ähnliche/identische Dokumente zu erkennen und Duplikate zu de-priorisieren oder zu clustern.
+
+12) Multilingual- und Medien-Indexierung
+- Beschreibung: Sprache erkennen, sprachspezifische Tokenizer/Stemmer verwenden; für Bilder/Video/Audio Metadaten, Tags, extrahierte Text (OCR), und embeddings indexieren.
+
+13) Semantische Indexierung (Embeddings)
+- Beschreibung: Neuronale Repräsentationen (Sentence-/Document-Embeddings) werden zusammen mit klassischen Indizes gespeichert oder in ANN-Indizes (Approximate Nearest Neighbors) ausgelagert.
+- Einsatz: Verbesserte semantische Suche und ähnliche Dokument-Suche. Trade-off: höherer Speicherbedarf und andere Antwortzeiten.
+
+Operational Considerations / Praktische Tipps
+- Freshness vs. Throughput: Wähle Batch für Durchsatz, NRT/Streaming für Freshness.
+- Speicher vs. Query-Latenz: Aggressive Kompression spart Platz, kann aber CPU bei Abfragen erhöhen.
+- Monitoring: Index-Size, Segmentanzahl, Merge-Kosten, Query-Latenz und Fehler bei Index-Feeds regelmäßig überwachen.
+- Testing: Relevanztests, A/B-Tests und synthetische Lasttests helfen, Indexierungsentscheidungen zu validieren.
+
+Zusammenfassung
+Indexierung ist mehr als "Wörter speichern": Es ist ein ganzes Ökosystem aus Textaufbereitung, datenstruktureller Gestaltung, Kompressions- und Verteilungsentscheidungen sowie Operationalisierung für Freshness und Skalierung. Die beste Strategie hängt von Anforderungen (Echtzeitbedarf, Speicher, Relevanzqualität) ab; häufig ist ein Hybridansatz (z. B. schneller NRT-Index für Headlines + Batch-Merges für Volltext) der praktischste Kompromiss.
 ## Herausforderungen
 ### Skalierung
  Das Web wächst ständig. Historisch mussten Suchmaschinen bereits in den 1990er Jahren ununterbrochen zusätzliche Hardware für Crawling und Indexierung bereitstellen, da sich die Zahl der Seiten alle paar Monate verdoppelte. Moderne Crawler setzen auf verteilte Architekturen (z.B. Apache Nutch auf Hadoop) und parallele Prozesse, um Milliarden von Seiten zu verarbeiten.
 
 ### robots.txt und Politeness
- Website-Betreiber können Crawler über die robots.txt-Datei steuern, indem sie angeben, welche URLs gecrawlt werden dürfen. Diese Datei dient vor allem dazu, Crawling-Traffic zu lenken und Serverüberlastung zu vermeiden. Crawler sollten die robots.txt-Regeln beachten und vorsichtig crawlen: etwa nie mehr als eine Verbindung gleichzeitig zu einem Host öffnen und zwischen den. Solche Politeness-Strategien verhindern, dass Server durch das Crawling überlastet oder blockiert werden.
+ Website-Betreiber können Crawler über die robots.txt-Datei steuern, indem sie angeben, welche URLs gecrawlt werden dürfen. Diese Datei dient vor allem dazu, Crawling-Traffic zu lenken und Serverüberlastung zu vermeiden. Crawler sollten die robots.txt-Regeln beachten und vorsichtig crawlen: etwa nie mehr als eine Verbindung gleichzeitig zu einem Host öffnen und zwischen den <!-- Satz unvollständig -->. Solche Politeness-Strategien verhindern, dass Server durch das Crawling überlastet oder blockiert werden.
 
 ### Dynamische Inhalte
  Viele moderne Webseiten laden Inhalte erst zur Laufzeit per JavaScript/AJAX nach. Traditionelle Crawler, die nur statisches HTML laden, überspringen diese Daten oft. Um dynamische Seiten vollständig zu erfassen, werden Techniken wie Headless-Browser (z.B. Puppeteer, Playwright oder Selenium) eingesetzt, die JavaScript ausführen und die Seite „vollständig“ rendern. Dadurch können auch Inhalte erfasst werden, die sonst übersehen würden.
+ <!-- Fällt nicht auch das Verarbeiten von Bilder/Videos in diese Kategorie? Oder ist das nochmal was anderes? Ich glaube das sollten wir auch ansprechen. -->
 
 ### Rate Limits
  Sowohl Crawler als auch Server setzen oft Crawling-Ratenbegrenzungen. Crawler implementieren daher Verzögerungen oder lesen in der robots.txt einen Crawl-Delay aus. Beispielsweise kann ein Crawler nach jeder Anfrage automatisch 200ms warten. Crawler4j z.B. nutzt seit Version 1.3 standardmäßig 200 ms Pause zwischen Anfragen. Wer zu schnell crawlt, riskiert, vom Server geblockt zu werden oder als Bot markiert zu werden.
 
-### Pay-per-Crawl
+### Pay-per-Crawl <!-- Warum erklärst du erst Pay-per-Crawl und sagst dann erst im nächsten Absatz wer das eingeführt hat? Besser andersherum als Unterpunkt -->
 Kommerzielle Anbieter ermöglichen Crawling „on demand“, bezahlt pro Crawl oder Datenvolumen.
 - Vorteile: Skalierbarkeit, geringere Wartung, robots.txt-Handling.
 - Nachteile: Kosten, eingeschränkte Kontrolle über Crawling-Strategie.
 - Beispiele: Zyte, Apify, SerpApi, Bright Data.
 
-### AI Crawler
+### AI Crawler 
+<!-- Vielleicht nochmal einen Satz ergänzen, was den AI-Crawler überhaupt auszeichnet. Ist irgendwie unklar, was der jetzt genau kann -->
 Cloudflare hat ein Feature namens Pay per Crawl eingeführt, Teil ihres AI Crawl Control-Produktes.
-Dabei Publisher können einen Preis pro erfolgreichem Crawl festlegen oder auch ggf. ablehnen. 
+Dabei Publisher können einen Preis pro erfolgreichem Crawl festlegen oder auch ggf. ablehnen. <!-- Satz unvollständig -->
 
 #### Vorteile
 - Monetarisierungsmöglichkeit für Content Owner  
-- Mehr Kontrolle 0über Zugriff durch AI-Crawler  
+- Mehr Kontrolle 0über <!-- Warum die "0" vor dem ü? --> Zugriff durch AI-Crawler  
 - Transparenz durch HTTP Status Codes und Preisauszeichnung  
 
 #### Herausforderungen
@@ -49,6 +137,7 @@ Dabei Publisher können einen Preis pro erfolgreichem Crawl festlegen oder auch 
 - Mindestpreis: $0,01 pro erfolgreichem Crawl 
 
 ## Mögliche Frameworks/Tools
+<!-- Auch hier einmal vor der Auflistung 1-2 Sätze was diese ganzen Tools im generellen machen. Also warum man die nutzt -->
 - Scrapy (Python): Weit verbreitetes Open-Source-Framework für Web-Crawling und -Scraping. Es ist schnell, flexibel und wird von einer großen Community gepflegt.
 - Crawler4j (Java): Einfacher Java-Crawler mit moderner API. Open Source, Multi-Thread-fähig und schnell einsetzbar.
 - Apache Nutch: Hochskalierbarer Java-Crawler auf Hadoop-Basis. Extrem anpassbar und für große Crawling-Jobs optimiert.
