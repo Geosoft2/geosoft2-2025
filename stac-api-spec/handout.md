@@ -102,6 +102,5 @@ Diese Endpunkte entsprechen der **STAC API Core Specification**, ohne zusätzlic
 ## 7. Quellen & weiterführende Literatur
 
 - [STAC Spezifikation – stacspec.org](https://stacspec.org)  
-- [STAC API Core Spezifikation (GitHub)](https://github.com/radiantearth/stac-api-spec)  
-- [STAC Browser](https://stacbrowser.org)  
+- [STAC API Core Spezifikation (GitHub)](https://github.com/radiantearth/stac-api-spec) 
 - [Radiant Earth Blog – Static vs. Dynamic STAC](https://medium.com/radiant-earth-insights)
