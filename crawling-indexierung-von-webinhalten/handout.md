@@ -22,154 +22,126 @@ Modulare Architektur: Typische Komponenten sind eine URL-Frontier (Warteschlange
 Robustheit: Der Crawler muss fehlertolerant sein (z.B. gegen Abbruch durch ungültige URLs) und „Spider-Traps“ (seitenweise Endlosschleifen) erkennen und umgehen. <!-- Man könnte hier nochmal auf Tiefensuche und Breitensuche eingehen und auch über die maximale Tiefe von Crawlern reden um zu vermeiden, dass der Bot nicht in eine solche Endlosschleife rutscht.-->
 
 ## Indexierung
-Indexierung verwandelt die beim Crawling gesammelten Rohdokumente in eine strukturierte, durchsuchbare Repräsentation. Während Crawling dokumentorientiert ist (Seite → Dokument), ist Indexierung term- bzw. feld-orientiert: Ziel ist, Anfragen (z. B. Stichwörter, Phrasen oder Filter) sehr schnell auf die relevanten Dokumente abzubilden. Das umfasst mehrere Teilschritte:
+Indexierung verwandelt die beim Crawling gesammelten Rohdokumente in eine strukturierte, durchsuchbare Repräsentation. Während Crawling dokumentorientiert ist (Seite → Dokument), ist Indexierung term- bzw. feld-orientiert: Ziel ist, Anfragen (z. B. Stichwörter, Phrasen oder Filter) sehr schnell auf die relevanten Dokumente abzubilden.
 
-#### Schritte der Indexierung
-Die Indexierung besteht aus einer Reihe aufeinanderfolgender (und teilweise iterativer) Schritte. Jeder Schritt hat eigene Design‑Entscheidungen, Fehlerfälle und Performance‑Auswirkungen. Im Folgenden eine ausführliche Aufschlüsselung, wie ein Produktions‑Indexierprozess typischerweise aussieht.
+### Schritte der Indexierung
+Die Indexierung lässt sich in wenige, leicht verständliche Schritte zusammenfassen. Wichtig zu beachten ist, dass diese Liste nicht vollständig ist.
 
-1) Dokumentaufnahme & Vorverarbeitung
-- Herkunft: Eingehende Rohdokumente kommen vom Crawler, aus Feeds, APIs oder manuellen Uploads. Zuerst werden Inhalte in ein Zwischenformat (z. B. JSON) überführt.
-- Aufgaben: Erkennen des MIME‑Typs (text/html, application/pdf, image/*), Extraktion von Text (HTML-Parsing, PDF‑Parser, OCR für Bilder), Erfassung von Metadaten (URL, HTTP‑Header, Last‑Modified, Content‑Language) und Erfassen strukturierter Daten (Schema.org, JSON‑LD, microdata).
-- Fehlerfälle: fehlerhafte Encodings, kaputte PDFs, fehlende Metadaten — solche Dokumente werden markiert, evtl. quarantänisiert oder mit Fallback‑Strategien weiterverarbeitet.
+1\. Aufnahme & Text‑Extraktion
+- Rohdokumente (vom Crawler, Feed oder API) werden eingesammelt. Aus HTML/PDF/Feeds wird der lesbare Text und die wichtigsten Metadaten (Titel, URL, Datum, Sprache) extrahiert.
 
-2) Boilerplate‑Entfernung & Haupttext‑Extraktion
-- Ziel: Entfernen von Navigationsleisten, Cookie‑Hinweisen, Footer, Sidebars, damit nur der relevante Inhaltskern indexiert wird.
-- Techniken: DOM‑Heuristiken, Text‑Density‑Algorithmen (z. B. Boilerpipe), CSS‑Selector‑Regeln oder ML‑basierte Klassifikatoren.
-- Trade‑offs: Aggressives Entfernen spart Indexplatz, kann aber wichtige kontextuelle Informationen (z. B. Captions) verlieren.
+2\. Reinigung & Kerntext
+- Boilerplate (Navigation, Footer, Werbung) wird entfernt, so dass hauptsächlich der eigentliche Inhalt indexiert wird. Ziel: Rauschen reduzieren, relevante Informationen behalten.
 
-3) Spracherkennung & Zeichensatz‑Normalisierung
-- Erkennung der Sprache (language detection) zur Auswahl sprachspezifischer Tokenizer/stemmers und korrekter Sortierung.
-- Unicode‑Normalisierung (NFC/NFKC), Vereinheitlichung von Whitespace, Entfernen oder Normieren von nicht‑druckbaren Zeichen.
+3\. Tokenisierung & Normalisierung
+- Zerlegung in Tokens (Wörter, Zahlen, URLs) und Vereinheitlichung (Kleinschreibung, einfache Unicode‑Normalisierung).
+- Stopword-Filter: Entfernt sehr häufige, wenig aussagekräftige Wörter wie „und“, „der“, „aber“, um das Rauschen im Index zu reduzieren.
+- Stemming: Führt Wörter auf ihre Grundform zurück (z. B. „läuft“, „laufen“ → „lauf“), damit verschiedene Wortformen gemeinsam gefunden werden.
+- Kurzes Beispiel: \
+"René läuft einen Marathon"  → ["rene", "lauf", "marathon"] \
+"Der Lauf endet, aber sie laufen weiter." → ["lauf", "endet", "sie", "lauf", "weiter"]
 
-4) Tokenisierung
-- Zerlegung des Textes in Terme (Tokens). Das umfasst Wortgrenzen, Nummernerkennung, Umgang mit Bindestrichen, URLs, E‑Mail‑Adressen sowie sprachspezifische Regeln (z. B. Zusammensetzungen im Deutschen).
-- Beispiele: "2024-05-01", "E‑Mail@example.com", Hashtags/Handles werden oft als eigene Token behandelt.
+4\. Feld‑Mapping & Signale
+- Wichtiges Mapping in Felder (title, body, url, tags). Zusätzliche Signale (z. B. ob der Term im Titel vorkommt) werden als Gewicht oder Filter gespeichert.
 
-5) Normalisierung & Filtern
-- Kleinschreibung (lowercasing), Entfernen von Satzzeichen (oder Beibehalten, falls relevant), Normalisierung von Akzenten je nach Sprache.
-- Stopword‑Filtering: Entfernen oder Heruntergewichten häufiger Funktionswörter (z. B. "und", "the"). Manche Systeme verzichten auf Stopword‑Removal zugunsten kontextueller Features.
+5\. Indexaufbau (invertierter Index)
+- Terme werden in einem invertierten Index abgelegt: Term → Liste von Dokument‑IDs (und optional Positionen oder Frequenzen). Zusätzlich werden sogenannte Vorwärtsdaten (auch „gespeicherte Felder“ oder „Forward Index“) abgelegt: Das sind ausgewählte Originalinhalte eines Dokuments (z. B. Titel, URL, Auszüge), die nicht nur für die Suche, sondern auch für die Anzeige von Suchergebnissen (z. B. Snippets/Vorschautexte) benötigt werden.
+- Kleines Beispiel (Positions‑frei): \
+D1: "Katzen und Hunde" → katze:[D1], und:[D1], hund:[D1] \
+D2: "Katzen laufen" → katze:[D1,D2], lauf:[D2]
 
-6) Stemming / Lemmatisierung und Wortformenbehandlung
-- Stemming (z. B. Porter, Snowball) reduziert Wörter auf einen Stamm; Lemmatisierung liefert das korrekte Lemma mithilfe linguistischer Regeln bzw. POS‑Tagging. <!-- Bisschen detailierter erklären -->
-- Entscheidung: Stemming ist schneller, Lemmatisierung genauer (benötigt ggf. POS‑Tagger und Wörterbücher).
-<!-- Beispiel geben -->
+6\. Commit, Sichtbarkeit & Updates
+- Der Index wird in schnappschussartigen Commits sichtbar gemacht, er kann also für eine Suchmaschine verwendet werden. Änderungen sind entweder sofort (NRT) oder periodisch (Batch) verfügbar; Updates werden meist als "Löschen + Neuindexieren" gehandhabt.
 
-7) Normalisierung von Zahlen, Datumsangaben und Einheiten
-- Extraktion und Normalisierung von numerischen Entitäten (Preise, Datumsangaben, Maßeinheiten) in maschinenlesbare Formen (z. B. ISO‑Datum), um Filter/Facetten zu ermöglichen.
+7\. Monitoring & Qualität
+- Laufende Tests (Suche‑Antworten, Latenz, Indexgröße) sowie einfache Metriken (Dokumentanzahl, Indexgröße, Fehler) überwachen die Qualität.
 
-8) Erkennung strukturierter Entitäten & Features
-- Named Entity Recognition (Personen, Orte, Organisationen), Erkennung von Tags, Kategorien, Autorennamen, Geo‑Koordinaten.
-- Extraktion von zusätzlichen Signalen: Titel‑Position, Überschriften (H1/H2), Link‑Ankertext‑Vorkommen, Dateigröße — diese werden später als Ranking‑Features gespeichert.
+### Wichtige Datenstrukturen und Konzepte
 
-9) Shingling / n‑gramme / Phrase‑Erkennung
-- Bildung von Token‑Ngrams oder Shingles (z. B. für Near‑Duplicate‑Detection mit MinHash) und zur Unterstützung von Phrase‑Queries. <!-- Zu komplex? -->
+Beim Aufbau einer Suchmaschine oder eines Suchsystems spielen bestimmte Datenstrukturen eine zentrale Rolle. Sie sorgen dafür, dass Suchanfragen schnell und effizient beantwortet werden können. Hier die wichtigsten Konzepte, einfach erklärt:
 
-10) Term‑Statistiken & Signale berechnen
-- Berechnung von Term Frequency (TF), Document Frequency (DF), Dokument‑Länge, Inverse Document Frequency (IDF) oder Vorverarbeitung für BM25‑Parameter. Manche Systeme berechnen zusätzlich PageRank‑artige Signale oder Popularitätsmetriken vor dem Speichern. <!-- Beispiel geben -->
+- Invertierter Index (Inverted Index):  
+    Stell dir vor, du hast viele Dokumente (z. B. Webseiten) und möchtest wissen, in welchen Dokumenten ein bestimmtes Wort vorkommt. Der invertierte Index ist wie ein großes Inhaltsverzeichnis: Für jedes Wort (Term) wird eine Liste gespeichert, in der steht, in welchen Dokumenten dieses Wort vorkommt. Diese Liste nennt man „Posting-Liste“. Oft werden zusätzlich die Positionen des Wortes im Dokument und wie oft es vorkommt (Term-Frequenz) gespeichert.  
+    Beispiel:  
+    - „Hund“ → kommt vor in Dokument 1, 3 und 7  
+    - „Katze“ → kommt vor in Dokument 2 und 3  
+    So kann das System blitzschnell alle Dokumente finden, die ein bestimmtes Wort enthalten.
 
-11) Feld‑ und Metadaten‑Mapping
-- Zuweisung von Termen zu Feldern (title, body, url, anchor_text, tags, geo). Felder ermöglichen unterschiedliche Gewichtungen und facettierte Suche.
+- Vorwärtsindex (Forward Index):  
+    Während der invertierte Index von Wort zu Dokument zeigt, geht der Vorwärtsindex den umgekehrten Weg: Er speichert für jedes Dokument, welche Wörter darin vorkommen. Das ist praktisch, wenn man z. B. für ein bestimmtes Dokument schnell alle enthaltenen Begriffe oder Metadaten (wie Titel, URL) nachschlagen möchte. Außerdem wird der Vorwärtsindex oft genutzt, um Suchergebnisse anzuzeigen (z. B. einen Textausschnitt/Snippet zu erzeugen) oder um die Relevanz eines Dokuments für eine Suchanfrage zu berechnen.
 
-12) Erstellen der Indexeinträge (Posting‑Erzeugung)
-- Invertierter Index: Für jeden Term werden Postings erzeugt (docID, Term‑Frequenz, Positionen, optional Payloads wie boost‑Werte oder Field‑IDs).
-- Vorwärtsindex: Optionales Speichern von Dokument → Termliste / Feature‑Vektor für Ranking‑Berechnungen und Snippet‑Generierung.
+- Positionsindex (Positional Index):  
+    Manchmal reicht es nicht zu wissen, ob ein Wort im Dokument vorkommt – man möchte auch wissen, an welcher Stelle. Der Positionsindex speichert deshalb zusätzlich die genaue Position jedes Wortes im Text. Das ist wichtig für Suchanfragen nach ganzen Phrasen („große Katze“) oder wenn Wörter in einem bestimmten Abstand zueinander stehen sollen.  
+    Beispiel:  
+    - Dokument 1: „Die große Katze schläft.“  
+    - Für das Wort „Katze“ wird gespeichert: kommt in Dokument 1 an Position 3 vor.
 
-13) Kompression & Speicherformat
-- Anwendung von Delta‑Codierung, Variable‑Byte‑Encoding oder Block‑Kompression auf Posting‑Listen; Speicherung in segmentbasierten Dateien (z. B. Lucene‑Segmente, SSTables).
-- Trade‑offs: Bessere Kompression reduziert I/O, erhöht aber CPU‑Nutzung bei Dekompression.
+Zusammengefasst:  
+- Der invertierte Index macht die Suche nach Wörtern schnell.  
+- Der Vorwärtsindex hilft, Dokumente und deren Inhalte effizient zu verwalten.  
+- Der Positionsindex ermöglicht präzise Suchen nach Phrasen oder Wortabständen.
 
-14) Segmentierung, Commit & Merge‑Strategien
-- Indexe werden in Segmenten geschrieben. Kleine Segmente vereinfachen Schnappschuss‑Commits und NRT, große Segmente sind lesefreundlicher.
-- Merge‑Strategien (tiered, logarithmic) entscheiden, wann kleine Segmente in größere zusammengeführt werden — beeinflusst Write‑Amplification und Suchperformance.
+### Trade-Offs bei der Indexierung
 
-15) Update / Delete / Versionierung
-- Updates: Meist implementiert als "delete + add" oder durch Versionskennzeichnung (soft deletes). Konsistente Sicht für Suchenden wird durch atomare Commits / snapshots gewährleistet.
-- Löschungen: Soft deletes werden häufig genutzt, um teure Rewrites zu vermeiden und Reindexing zu verzögern.
-
-16) Snippet‑Erzeugung & Highlighting
-- Speichern oder Wiederherstellen relevanter Textausschnitte (Vorwärtsindex oder stored fields) für Suchergebnis‑Snippets und Highlighting.
-
-17) Qualitätsprüfungen, Tests & Monitoring
-- Relevance‑Tests (kann manuell oder per A/B‑Testing erfolgen), Index‑Konsistenzprüfungen, Validierung auf fehlende/kaputte Dokumente.
-- Metriken: Index‑Size, Segmentanzahl, Merge‑Kosten, Index‑Durchsatz, Query‑Latenz, Fehlerquoten.
-
-18) Produktionale Betriebsaspekte
-- Backpressure: Beim Einspielen großer Mengen sind Queues und Rate‑Limits wichtig.
-- Idempotenz: Event‑Verarbeitung sollte idempotent sein, um Doppelerfassungen zu vermeiden.
-- Recovery: Snapshots, Replikate und Reindex‑Pipelines zur Wiederherstellung.
-
-19) Erweiterungen: Multimodal & Semantische Indexe
-- Für Bilder/Audio/Video: Extrahierte Metadaten, OCR/Text‑Transkripte, und ggf. Embeddings werden ergänzt.
-- Embeddings: Speicherung von Sentence/Document‑Embeddings in ANN‑Index für semantische Suche oder Hybrid‑Ansätze (BM25 + ANN rerank).
-
-Zusammenfassend ist Indexierung eine mehrstufige Pipeline mit vielen optionalen Komponenten. Jede Stufe bietet Gestaltungsspielraum: schnell und grob vs. langsam und präzise, platzsparend vs. reich an zusätzlichen Ranking‑Features. Für Lehrzwecke empfiehlt sich, die Pipeline schrittweise aufzubauen (zuerst einfacher inverted index, dann Positionen, Felder, und schließlich Kompression/Distributed‑Aspekte).
-
-#### Wichtige Datenstrukturen und Konzepte
-- Invertierter Index: Die zentrale Struktur der Volltextsuche. Für jeden Term (Wort) gibt es eine Posting-Liste mit Dokument-IDs, Positionen (für Phrasensuche) und optional Term-Frequenzen. Dies ermöglicht sehr schnelle Term -> Dokument Abfragen.
-- Vorwärtsindex (Forward Index): Dokumentzentrierte Speicherung (z. B. Dokument -> Termliste). Nützlich für Ranking-Berechnungen, schneller Zugriff auf Dokumentinhalte und für Wiederherstellung (snippet generation).
-- Postings-Optimierungen: Skip-Listen/-Punkte, Block- bzw. Delta-Codierung und Kompression (Variable-Byte, Elias-Gamma, PForDelta) reduzieren Speicherbedarf und beschleunigen Merge/Intersection von Posting-Listen.
-- Positional Index: Speichert Term-Positionen innerhalb eines Dokuments für genaue Phrasen- und Nähe-Suchen.
-
-#### Trade-Offs bei der Indexierung
-
-Im Folgenden eine strukturierte Gegenüberstellung gängiger Indexierungsstrategien. Zu jeder Strategie kurz: Beschreibung, typische Vor-/Nachteile, typische Einsatzfälle und die wichtigsten Trade‑offs.
+Im Folgenden eine strukturierte Gegenüberstellung gängiger Indexierungsstrategien. Zu jeder Strategie kurz: Beschreibung, typische Vor-/Nachteile und typische Einsatzfälle.
 
 A) Batch-Indexierung (periodisch)
 - Kurzbeschreibung: Dokumente werden gesammelt und in großen Batches (z. B. nächtliche Jobs) indexiert. Das Ergebnis sind große, optimierte Segmente, die seltener gemerged werden.
 - Vorteile: Sehr hoher Durchsatz beim Schreiben, sehr gute Kompression und niedrige Merge-Kosten pro Dokument.
 - Nachteile: Hohe Freshness‑Latenz (neue Inhalte sind erst nach dem Batch sichtbar).
 - Typische Einsatzfälle: Archive, wissenschaftliche Repositorien, Websites mit geringer Änderungsrate.
-- Wichtiger Trade‑off: Maximale Schreibeffizienz vs. Aktualität der Sucheergebnisse.
+- Trade‑off: Maximale Schreibeffizienz vs. Aktualität der Sucheergebnisse.
 
 B) Inkrementelle / Near-Real-Time (NRT) Indexierung
 - Kurzbeschreibung: Kleine Blöcke oder einzelne Dokumente werden fortlaufend indexiert; Änderungen sind in Sekunden bis Minuten verfügbar.
 - Vorteile: Geringe Latenz, geeignet für News, Feeds oder interaktive Anwendungen.
 - Nachteile: Höherer Overhead (viele kleine Segmente), häufigere Merges, evtl. schlechtere Kompressionsraten.
 - Typische Einsatzfälle: Nachrichtenportale, E‑Commerce (Produktänderungen), Publish/Subscribe-Systeme.
-- Wichtiger Trade‑off: Freshness auf Kosten von Schreib‑/Merge‑Kosten und möglicher Fragmentierung des Indexes.
+- Trade‑off: Freshness auf Kosten von Schreib‑/Merge‑Kosten und möglicher Fragmentierung des Indexes.
 
 C) Streaming- / Event-getriebene Indexierung
 - Kurzbeschreibung: Änderungen werden als Events (z. B. Kafka) gestreamt und von Indexer‑Services in Pipelines verarbeitet.
 - Vorteile: Sehr skalierbar, natürliche Integration in verteilte Architekturen, gute Eignung für Microservices.
 - Nachteile: Komplexere Fehlerbehandlung (genau‑einmal‑Semantik), Latenz kann variieren, zusätzliche Infrastruktur nötig.
 - Typische Einsatzfälle: Große verteilte Systeme, Multi‑tenant‑Plattformen, Event‑sourcing‑Architekturen.
-- Wichtiger Trade‑off: Operationaler Aufwand und Komplexität vs. Skalierbarkeit und Flexibilität.
+- Trade‑off: Operationaler Aufwand und Komplexität vs. Skalierbarkeit und Flexibilität.
 
 D) Nearline / Hybrid-Strategien
 - Kurzbeschreibung: Hybridansatz: kritische Felder (Titel, Headline, Metadaten) werden NRT indexiert, der Volltext periodisch in Batches optimiert.
 - Vorteile: Kompromiss zwischen Freshness und Effizienz; häufig gute Nutzererfahrung bei moderatem Betriebsoverhead.
 - Nachteile: Mehr Komplexität im Pipeline‑Management (zwei Wege pflegen).
 - Typische Einsatzfälle: News‑Aggregatoren, große Websites mit wechselnder Priorität von Inhalten.
-- Wichtiger Trade‑off: Implementationskomplexität gegen bessere Balance von Frische und Kompressions-/Mergeeffizienz.
+- Trade‑off: Implementationskomplexität gegen bessere Balance von Frische und Kompressions-/Mergeeffizienz.
 
 E) Feld- und gewichtete Indexierung
 - Kurzbeschreibung: Indexierung nach Feldern (title, body, url, anchor_text, tags) mit feldspezifischen Boosts/Weighting.
 - Vorteile: Feingranulare Relevanzsteuerung, ermöglicht facettierte Suche und bessere Ranking‑Signale.
 - Nachteile: Größerer Index und komplexere Query‑Scoring‑Logik.
 - Typische Einsatzfälle: Enterprise‑Search, E‑Commerce, fachliche Suchen mit Metadaten.
-- Wichtiger Trade‑off: Genauigkeit/Ranking‑Feinheit vs. Indexgröße und Query‑Komplexität.
+- Trade‑off: Genauigkeit/Ranking‑Feinheit vs. Indexgröße und Query‑Komplexität.
 
 F) Positions- und Phrase-Indexierung
 - Kurzbeschreibung: Speicherung von Term‑Positionen innerhalb von Dokumenten (positional index) für Phrasen‑ und Proximity‑Queries.
 - Vorteile: Ermöglicht exakte Phrasen‑ und Abstandsabfragen, steigert Relevanzpräzision.
 - Nachteile: Deutlich größerer Speicherbedarf und zusätzliche Verarbeitung beim Indexieren.
 - Typische Einsatzfälle: Juristische Texte, wissenschaftliche Suche, Anwendungen mit hohem Bedarf an exakten Phrasen.
-- Wichtiger Trade‑off: Präzision bei der Suche vs. zusätzlicher Speicher‑ und CPU‑Aufwand.
+- Trade‑off: Präzision bei der Suche vs. zusätzlicher Speicher‑ und CPU‑Aufwand.
 
 G) Kompressions- und Speicherstrategien
 - Kurzbeschreibung: Optimierungen wie Delta‑Codierung, Variable‑Byte, Block‑Kompression, columnar storage für Term‑Statistiken oder segmentbasierte Stores (SSTables).
 - Vorteile: Reduzierter Speicherplatz und I/O, oft schnellere Durchsatzraten bei Lesebetrieb.
 - Nachteile: Höherer CPU‑Aufwand für Dekompression und komplexere Implementierung.
 - Typische Einsatzfälle: Große, read‑heavy Indizes mit begrenztem Speicherbudget.
-- Wichtiger Trade‑off: Speicherersparnis vs. CPU‑Kosten und eventuell höhere Latenz pro Query.
+- Trade‑off: Speicherersparnis vs. CPU‑Kosten und eventuell höhere Latenz pro Query.
 
-Operational Considerations / Praktische Tipps (kompakt)
+Zusammengefasst:
 - Freshness vs. Throughput: Batch maximiert Durchsatz; NRT/Streaming maximiert Freshness. Hybridansätze sind in der Praxis oft sinnvoll.
-- Speicher vs. Query‑Latenz: Aggressive Kompression spart Platz, kann aber CPU‑intensiv sein und Query‑Latenz erhöhen.
-
+- Genauigkeit vs. Speicher vs. Query‑Latenz: Speichern von zusätzlichen Informationen (Positions- und Phrase-Indizes) und komplexe Gewichtung der Indizes führt zu mehr Speicherbedarf und ist CPU-intensiver. Aggressive Kompression spart Platz, kann aber die CPU‑intensivtät und Query‑Latenz weiter erhöhen.
 
 Zusammenfassung
 Indexierung ist mehr als "Wörter speichern": Es ist ein ganzes Ökosystem aus Textaufbereitung, datenstruktureller Gestaltung, Kompressions- und Verteilungsentscheidungen sowie Operationalisierung für Freshness und Skalierung. Die beste Strategie hängt von Anforderungen (Echtzeitbedarf, Speicher, Relevanzqualität) ab; häufig ist ein Hybridansatz (z. B. schneller NRT-Index für Headlines + Batch-Merges für Volltext) der praktischste Kompromiss.
+
+
 ## Herausforderungen
 ### Skalierung
  Das Web wächst ständig. Historisch mussten Suchmaschinen bereits in den 1990er Jahren ununterbrochen zusätzliche Hardware für Crawling und Indexierung bereitstellen, da sich die Zahl der Seiten alle paar Monate verdoppelte. Moderne Crawler setzen auf verteilte Architekturen (z.B. Apache Nutch auf Hadoop) und parallele Prozesse, um Milliarden von Seiten zu verarbeiten.
