@@ -27,3 +27,30 @@ Während die **STAC Spezifikation** das Datenmodell und statische JSON-Strukture
 > Die STAC API ist die *programmierbare* Erweiterung der statischen STAC-Kataloge – beide nutzen dasselbe Datenmodell, unterscheiden sich aber in der Art des Zugriffs.
 
 ---
+
+## 3. Architektur der STAC API (ohne Erweiterungen)
+
+Die **STAC API Core Spezification** baut auf HTTP und JSON auf und ist modular strukturiert.
+Sie definiert den Kern (Core), auf den Erweiterungen aufsetzen können (z.B. Filter, Sortierung, Pagination, Query).
+
+### Komponenten der Architektur
+
+-**Landing Page (`/`)**
+ Einstiegspunkt der API mit Links zu den wichtigsten Ressourcen.
+
+-**Collections (`/collections`, `/collections/{collectionId}`)**
+ Beschreiben Datensammlungen (z.B. Sentinel-2, Landsat-8).
+ Enthalten Metadaten wie räumliche/zeitliche Abdeckung, Lizenz, Assets.
+
+-**Items (`/collections/{collectionId}items`)**
+ Repräsentieren einzelne Beobachtungen oder Dateien innerhalb einer Collection.
+
+-**Search (`/search`)**
+ Zentrales Feature zur Abfrage von Items anhand von Filtern:
+ ```bash
+ POST /search
+ {
+    "collections": ["sentinel-2-l2a"],
+    "bbox": [7.0, 50.0, 8.0, 51.0],
+    "datetime": "2025-01-01/2025-01-31"
+ }
