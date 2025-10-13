@@ -48,9 +48,60 @@ Sie definiert den Kern (Core), auf den Erweiterungen aufsetzen können (z.B. Fil
 -**Search (`/search`)**
  Zentrales Feature zur Abfrage von Items anhand von Filtern:
  ```bash
- POST /search
+  /search
  {
     "collections": ["sentinel-2-l2a"],
     "bbox": [7.0, 50.0, 8.0, 51.0],
     "datetime": "2025-01-01/2025-01-31"
  }
+```
+---
+
+## 4. Endpunkte der STAC API (ohne Erweiterungen)
+
+| Endpoint | Methode | Beschreibung |
+|----------|---------|--------------|
+|`/`| GET | Landing Page mit Links zu den wichtigsten Ressourcen|
+|`/conformance`|GET|Zeigt unterstützte STAC- und OGC-Standards an |
+|`/collections`|GET| Listet alle verfügbaren Collections auf |
+|`/collections/{collectionId}`| GET | Details zu einer Collection |
+|`/collections/{collectionId}/items`|GET |Liste der Items einer Collection|
+|`/collections/{collectionId}/items/{itemId}`| GET | Einzelnes Item |
+| `/search`| GET/POST | Suche nach Items über Filter (Raum, Zeit, etc.) |
+
+Diese Endpunkte entsprechen der **STAC API Core Specification**, ohne zusätzliche Erweiterungen wie *Filter*, *Query* oder *Transaction*.
+
+---
+
+## 5. Typische Anwendungsfälle
+
+### STAC API (dynamisch)
+-**Interaktive Datensuche:** Clients (z.B. QGIS, Python-Skripte, Jupyter Notebooks) können Datensätze nach Raum, Zeit oder Attributen abfragen.
+-**Automatisierte Workflows:** Verarbeitungspipelines können API-Aufrufe automatisch durchführen (z.B. tägliche Datenupdates).
+-**Integration:** REST/JSON-Schnittstellen lassen sich leicht in Web- oder Desktop-Anwendungen integrieren.
+
+### STAC (statisch)
+-**Dokumentation & Open Data-Kataloge:** Leichtgewichtige Veröffentlichung kleiner oder fixer Datensammlungen, z.B. Forschungsprojekte.
+-**Offline-Nutzung:** STAC-Dateien (JSON) können ohne Serverinfrastruktur genutzt werden.
+
+### Vergleich
+
+| Szenario | STAC (statisch) | STAC API (dynamisch) |
+|----------|-----------------|----------------------|
+| Kleine fixe Datensätze | Ideal | Overkill|
+| Große, häufig aktualisierte Datensätze | Ungeeignet | Optimal |
+| Nutzerfreundliche Suche | Manuell | Automatisiert |
+| Integration in Clients | Eingeschränkt | Einfach |
+
+---
+
+## 6. Bedeutung für das Geosoftware-II-Projekt
+
+--- 
+
+## 7. Quellen & weiterführende Literatur
+
+- [STAC Spezifikation – stacspec.org](https://stacspec.org)  
+- [STAC API Core Spezifikation (GitHub)](https://github.com/radiantearth/stac-api-spec)  
+- [STAC Browser](https://stacbrowser.org)  
+- [Radiant Earth Blog – Static vs. Dynamic STAC](https://medium.com/radiant-earth-insights)
