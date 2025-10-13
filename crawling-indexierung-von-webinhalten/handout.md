@@ -36,7 +36,7 @@ Ein Crawler ist üblicherweise in klar abgegrenzte Komponenten organisiert. Das 
 - DNS/HTTP‑Fetch‑Modul: Führt DNS‑Auflösung, Verbindungsaufbau und HTTP(S)‑Requests aus. Handhabt Timeouts, Redirects und Header‑Parsing.
 - Parser: Extrahiert HTML‑Inhalte, Links, Metadaten und strukturierte Daten. Kann optional JavaScript‑Rendering anstoßen.
 - Duplikaterkennung: Prüft Inhalte und URLs auf Duplikate mit Techniken wie URL‑Canonicalization, Content‑Hashes oder Bloom‑Filtern.
-- Indexierer / Speicher: Speichert Rohdaten, extrahierten Text, Metadaten und Media‑Referenzen in der Datenbank oder an einen Suchindex wie Elasticsearch.
+- Indexierer / Speicher: Speichert Rohdaten, extrahierten Text, Metadaten und Media‑Referenzen in der Datenbank oder an einen Suchindex wie Elasticsearch. In großen Systemen ist der eigentliche Indexer ein separater Dienst (Index-Pipeline). Der Crawler speichert typischerweise gefetchte Rohdaten (Cache) und sendet sie zur Indexier-Pipeline. Kleine Systeme kombinieren aber Crawling + Indexierung.
 - Scheduler / Politess‑Layer: Setzt Crawl‑Delays, Host‑Limits und Token‑Bucket‑Regeln durch.
 - Monitoring & Logging: Metriken für Fetch‑Rate, Fehler, Latenzen und Ressourcenverbrauch sowie Alerting.
 - Optional: Proxy‑/IP‑Management, Captcha‑Solver, Post‑Processing (OCR, Transkription).
