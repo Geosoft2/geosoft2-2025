@@ -12,14 +12,58 @@ Wofür braucht man das? Von großen Web-Suchmaschinen über Nachrichtenseiten bi
 
 ## Grundprinzipien von Crawlern
 Ein Web-Crawler (auch Spider oder Bot genannt) ist ein Programm, das systematisch Webseiten besucht, um deren Inhalte zu sammeln und zu indizieren. Er startet mit einer Liste von Start-URLs (Seed-URLs), lädt eine Seite herunter, extrahiert den Text und alle darin enthaltenen Links und fügt diese neuen Links der Warteschlange (Frontier) hinzu. \
-Anschließend wird die nächste URL aus der Frontier abgearbeitet. Dieser Prozess setzt sich fort, bis alle relevanten Seiten erfasst sind oder eine Abbruchbedingung erreicht wird.
-<!-- Gerne noch ein zwei Sätze darüber verlieren, wie die Warteschlange aufgebaut ist. Welche Arten von Priorisierungen in der Warteschlange gibt es? -->
+Anschließend wird die nächste URL aus der Frontier abgearbeitet. Dieser Prozess setzt sich fort, bis alle relevanten Seiten erfasst sind oder eine Abbruchbedingung erreicht wird. \
+\
+Die Frontier ist die zentrale Warteschlange eines Crawlers. Sie enthält URLs mit Metadaten (Depth, Host, Priorität, Timestamps) und steuert Reihenfolge und Tempo des Crawls. Übliche Queue‑Typen sind FIFO für breite Coverage, LIFO für tiefe Traversals und Priority‑Queues für scorebasierte Reihenfolgen. Prioritäten ergeben sich aus Tiefe, Linkkontext, Änderungsfrequenz oder Geschäftsregeln.
 
-Ablauf eines Crawlers: Start mit Seed-URLs → Seite abrufen (HTTP-Request) → Seite parsen → Text indizieren und Links extrahieren → neue Links zur Frontier hinzufügen <!-- 1. Das ganze vielleicht in eine nummierte Liste (also 1., 2.,... 6. überführen und dann am Ende nochmal verdeutlichen, dass der Prozess iterativ ist und wieder von Vorne beginnt. Man könnte auch zu jedem Schritt ruhig 1-2 Sätze schreiben, die ggf. verdeutlichen, was da passiert) -->
+### Ablauf eines Crawlers
+1. **Start mit Seed‑URLs** \
+    - Starte mit einer oder mehreren Anfangs‑URLs. Diese Seeds geben die Ausgangspunkte für den Crawl vor.
+2. **URL aus der Frontier auswählen und auf Höflichkeit prüfen** \
+    - Die nächste URL wird aus der Frontier entnommen. Vor dem Fetch prüft der Crawler robots.txt, Host‑Limits und Rate‑Limits.
+3. **Seite abrufen (HTTP‑Request)** \
+    - Der Crawler lädt die Ressource per HTTP(S). Dabei werden Statuscodes, Header (z. B. Last‑Modified, ETag) und mögliche Weiterleitungen beachtet.
+4. **Seite parsen** \
+    - Der heruntergeladene Inhalt wird geparst. Bei Bedarf wird JavaScript gerendert (Headless‑Browser) oder API‑Endpunkte genutzt, um dynamisch nachgeladene Inhalte zu erfassen.
+5. **Text indizieren und Links extrahieren** \
+    - Relevanter Text und Metadaten werden gespeichert oder an die Indexierung weitergegeben. Links, Media‑Referenzen und strukturierte Metadaten werden identifiziert und annotiert.
+6. **Neue Links normalisieren, deduplizieren und zur Frontier hinzufügen** \
+    - Gefundene URLs werden normalisiert, auf Duplikate geprüft und gegebenenfalls priorisiert in die Frontier eingefügt. Fehlerhafte oder blockierte Links werden entsprechend behandelt.
 
-Modulare Architektur: Typische Komponenten sind eine URL-Frontier (Warteschlange), ein DNS/HTTP-Fetch-Modul, ein Parser (für HTML/Links), eine Duplikaterkennung und ein Indexierer.
+Der Prozess ist iterativ. Nach Schritt 6 beginnt der Crawler wieder bei Schritt 2 mit der nächsten URL aus der Frontier und läuft so lange, bis Abbruchbedingungen erreicht sind (Frontier leer, Budget/Limit erreicht, zeitliche Begrenzung oder manuelle Unterbrechung).
 
-Robustheit: Der Crawler muss fehlertolerant sein (z.B. gegen Abbruch durch ungültige URLs) und „Spider-Traps“ (seitenweise Endlosschleifen) erkennen und umgehen. <!-- Man könnte hier nochmal auf Tiefensuche und Breitensuche eingehen und auch über die maximale Tiefe von Crawlern reden um zu vermeiden, dass der Bot nicht in eine solche Endlosschleife rutscht.-->
+### Modulare Architektur eines Crawlers
+Ein Crawler ist üblicherweise in klar abgegrenzte Komponenten organisiert. Das vereinfacht Wartung, Skalierung und Austausch einzelner Teile. Wichtige Module sind:
+- URL‑Frontier: Warteschlange mit Metadaten wie Tiefe, Priorität und Host. Zuständig für Scheduling und Persistenz.
+- DNS/HTTP‑Fetch‑Modul: Führt DNS‑Auflösung, Verbindungsaufbau und HTTP(S)‑Requests aus. Handhabt Timeouts, Redirects und Header‑Parsing.
+- Parser: Extrahiert HTML‑Inhalte, Links, Metadaten und strukturierte Daten. Kann optional JavaScript‑Rendering anstoßen.
+- Duplikaterkennung: Prüft Inhalte und URLs auf Duplikate mit Techniken wie URL‑Canonicalization, Content‑Hashes oder Bloom‑Filtern.
+- Indexierer / Speicher: Speichert Rohdaten, extrahierten Text, Metadaten und Media‑Referenzen in der Datenbank oder an einen Suchindex wie Elasticsearch.
+- Scheduler / Politess‑Layer: Setzt Crawl‑Delays, Host‑Limits und Token‑Bucket‑Regeln durch.
+- Monitoring & Logging: Metriken für Fetch‑Rate, Fehler, Latenzen und Ressourcenverbrauch sowie Alerting.
+- Optional: Proxy‑/IP‑Management, Captcha‑Solver, Post‑Processing (OCR, Transkription).
+
+### Fehlertoleranz und Schutzmechanismen
+Ein produktiver Crawler muss robust gegen Netzwerk‑ und Inhaltsfehler sein und sich gegen Fallen im Web schützen.
+- Fehlerbehandlung: Timeouts, HTTP‑Fehlercodes und Verbindungsabbrüche mit Backoff und Retry‑Limits behandeln.
+- Validierung: Ungültige oder schadhafte URLs erkennen und filtern. URL‑Normalisierung und Blacklists einsetzen.
+- Spider‑Trap‑Detektion: Endlose Seitenfolgen erkennen durch Muster wie sich wiederholende URL‑Parameter, Kalenderpaginierung oder rekursive Redirects. Maßnahmen sind Max‑Depth, Max‑Pages‑per‑Host, Erkennung zyklischer URL‑Sequenzen und Heuristiken für „sich wiederholende Pfade“.
+- Ressourcenschutz: Limits für parallele Verbindungen pro Host, Bandbreitenbegrenzung und Timeout‑Richtlinien.
+- Datenschutz und Legalität: robots.txt respektieren, rechtliche Prüfungen durchführen, personenbezogene Daten erkennen und behandeln.
+- Observability: Fehlerquoten, langsame Hosts und ungewöhnliche Redirect‑Muster kontinuierlich überwachen und Alerts einrichten.
+
+### Crawling‑Strategien und Tiefenbegrenzung
+Wichtige Grundstrategien sind Breitensuche und Tiefensuche. Beide haben Vor‑ und Nachteile und benötigen Schutzvorkehrungen.
+- Breitensuche (BFS): Arbeitet Ebene für Ebene. Vorteil ist frühe Coverage und gute Coverage nahe den Seeds. Gut für frische Indizierung. Nachteil ist hoher Speicherbedarf für die Frontier.
+- Tiefensuche (DFS): Taucht tief in einer Seitenstruktur ein. Vorteil ist vollständige Traversierung einzelner Pfade. Nachteil ist Risiko, in tiefe oder endlose Strukturen zu geraten.
+- Priority‑ oder Focused‑Crawling: URLs nach Score, Thema oder Geschäftsregeln priorisieren. Gut bei thematisch eingeschränkten Projekten.
+- Revisit‑Strategien: Seiten mit hoher Änderungsrate öfter recrawlen. Zeitbasiertes Scheduling bietet mehr Effizienz als einheitliche Intervalle.
+Schutz gegen Endlosschleifen und Over‑Crawling
+- Max‑Depth: Eine feste maximale Tiefe definiert, wie „weit“ vom Seed aus gecrawlt wird.
+- Max‑Pages‑per‑Host: Begrenzt die Zahl der Seiten, die pro Host besucht werden.
+- Muster‑Blacklist: URLs mit typischen Fallen (z. B. session‑IDs, sort/dir‑Parameter, sehr tiefe Paginierung) filtern.
+- Seen‑Set und Duplikatprüfung: Verhindert wiederholtes Besuchen derselben oder sehr ähnlicher URLs.
+- Adaptive Regeln: Bei vielen 4xx/5xx‑Fehlern oder hohen Redirect‑Raten Host temporär niedriger priorisieren oder sperren.
 
 ## Indexierung
 Indexierung verwandelt die beim Crawling gesammelten Rohdokumente in eine strukturierte, durchsuchbare Repräsentation. Während Crawling dokumentorientiert ist (Seite → Dokument), ist Indexierung term- bzw. feld-orientiert: Ziel ist, Anfragen (z. B. Stichwörter, Phrasen oder Filter) sehr schnell auf die relevanten Dokumente abzubilden.
@@ -147,29 +191,32 @@ Indexierung ist mehr als "Wörter speichern": Es ist ein ganzes Ökosystem aus T
  Das Web wächst ständig. Historisch mussten Suchmaschinen bereits in den 1990er Jahren ununterbrochen zusätzliche Hardware für Crawling und Indexierung bereitstellen, da sich die Zahl der Seiten alle paar Monate verdoppelte. Moderne Crawler setzen auf verteilte Architekturen (z.B. Apache Nutch auf Hadoop) und parallele Prozesse, um Milliarden von Seiten zu verarbeiten.
 
 ### robots.txt und Politeness
- Website-Betreiber können Crawler über die robots.txt-Datei steuern, indem sie angeben, welche URLs gecrawlt werden dürfen. Diese Datei dient vor allem dazu, Crawling-Traffic zu lenken und Serverüberlastung zu vermeiden. Crawler sollten die robots.txt-Regeln beachten und vorsichtig crawlen: etwa nie mehr als eine Verbindung gleichzeitig zu einem Host öffnen und zwischen den <!-- Satz unvollständig -->. Solche Politeness-Strategien verhindern, dass Server durch das Crawling überlastet oder blockiert werden.
+ Website-Betreiber können Crawler über die robots.txt-Datei steuern, indem sie angeben, welche URLs gecrawlt werden dürfen. Diese Datei dient vor allem dazu, Crawling-Traffic zu lenken und Serverüberlastung zu vermeiden. Crawler sollten die robots.txt-Regeln beachten und vorsichtig crawlen: etwa nie mehr als eine Verbindung gleichzeitig zu einem Host öffnen und zwischen den Anfragen mehrere Sekunden warten. Solche Politeness-Strategien verhindern, dass Server durch das Crawling überlastet oder blockiert werden.
 
 ### Dynamische Inhalte
- Viele moderne Webseiten laden Inhalte erst zur Laufzeit per JavaScript/AJAX nach. Traditionelle Crawler, die nur statisches HTML laden, überspringen diese Daten oft. Um dynamische Seiten vollständig zu erfassen, werden Techniken wie Headless-Browser (z.B. Puppeteer, Playwright oder Selenium) eingesetzt, die JavaScript ausführen und die Seite „vollständig“ rendern. Dadurch können auch Inhalte erfasst werden, die sonst übersehen würden.
- <!-- Fällt nicht auch das Verarbeiten von Bilder/Videos in diese Kategorie? Oder ist das nochmal was anderes? Ich glaube das sollten wir auch ansprechen. -->
+ Viele moderne Webseiten laden Inhalte erst zur Laufzeit per JavaScript/AJAX nach. Traditionelle Crawler, die nur statisches HTML laden, überspringen diese Daten oft. Um dynamische Seiten vollständig zu erfassen, werden Techniken wie Headless-Browser (z.B. Puppeteer, Playwright oder Selenium) eingesetzt, die JavaScript ausführen und die Seite „vollständig“ rendern. Dadurch können auch Inhalte erfasst werden, die sonst übersehen würden. \
+ \
+ Multimedia (Bilder, Videos, Audio) ist hier ein separater, aber häufig überlappender Aspekt. Viele Medien werden per JS geladen oder in externen Playern eingebunden, weshalb ein reiner HTML‑Fetch nicht alle Mediendateien entdecken kann. Die reine Erfassung der HTML‑Referenz genügt oft nicht: für Suche/Analyse braucht man Thumbnails, Metadaten, OCR‑Texte oder Transkripte, die man anderweitig extrahieren und verarbeiten muss.
 
 ### Rate Limits
  Sowohl Crawler als auch Server setzen oft Crawling-Ratenbegrenzungen. Crawler implementieren daher Verzögerungen oder lesen in der robots.txt einen Crawl-Delay aus. Beispielsweise kann ein Crawler nach jeder Anfrage automatisch 200ms warten. Crawler4j z.B. nutzt seit Version 1.3 standardmäßig 200 ms Pause zwischen Anfragen. Wer zu schnell crawlt, riskiert, vom Server geblockt zu werden oder als Bot markiert zu werden.
 
-### Pay-per-Crawl <!-- Warum erklärst du erst Pay-per-Crawl und sagst dann erst im nächsten Absatz wer das eingeführt hat? Besser andersherum als Unterpunkt -->
-Kommerzielle Anbieter ermöglichen Crawling „on demand“, bezahlt pro Crawl oder Datenvolumen.
-- Vorteile: Skalierbarkeit, geringere Wartung, robots.txt-Handling.
-- Nachteile: Kosten, eingeschränkte Kontrolle über Crawling-Strategie.
-- Beispiele: Zyte, Apify, SerpApi, Bright Data.
+### Pay-per-Crawl
+Pay‑per‑Crawl‑Angebote sind kommerzielle Dienste, die Crawling und Datenerfassung „on demand“ bereitstellen. Bezahlt wird nach einzelnen Crawls, nach übertragenem Datenvolumen oder nach API‑Aufrufen. Solche Anbieter übernehmen Infrastruktur, Proxy‑Management, Skalierung und oft auch Anti‑Bot‑Mechanismen, sodass du dich hauptsächlich auf Daten‑Extraktion und Nachverarbeitung konzentrieren kannst.
+
+- Vorteile: Skalierbarkeit, geringere Wartung, robots.txt-Handling
+- Nachteile: Kosten, eingeschränkte Kontrolle über Crawling-Strategie
+- Beispiele: Zyte, Apify, SerpApi, Bright Data
 
 ### AI Crawler 
-<!-- Vielleicht nochmal einen Satz ergänzen, was den AI-Crawler überhaupt auszeichnet. Ist irgendwie unklar, was der jetzt genau kann -->
-Cloudflare hat ein Feature namens Pay per Crawl eingeführt, Teil ihres AI Crawl Control-Produktes.
-Dabei Publisher können einen Preis pro erfolgreichem Crawl festlegen oder auch ggf. ablehnen. <!-- Satz unvollständig -->
+AI‑Crawler sind automatisierte Programme (Bots), die gezielt Webinhalte sammeln, um sie z. B. für Training, Feeds oder Antwortgenerierung in KI‑Systemen zu verwenden. Sie unterscheiden sich von klassischen Suchmaschinen‑Crawlern oft durch deutlich höhere Abrufraten, andere Nutzungszwecke (z. B. Training großer Modelle) und teils abweichende Identifikations‑/Authentifizierungsformen. \
+\
+Cloudflare nutzt das Prinzip des Pay per Crawl, als Teil ihres AI Crawl Control-Produktes.
+Dabei können Publisher einen Preis pro erfolgreichem Crawl festlegen oder auch ggf. ablehnen.
 
 #### Vorteile
 - Monetarisierungsmöglichkeit für Content Owner  
-- Mehr Kontrolle 0über <!-- Warum die "0" vor dem ü? --> Zugriff durch AI-Crawler  
+- Mehr Kontrolle über den Zugriff durch AI-Crawler  
 - Transparenz durch HTTP Status Codes und Preisauszeichnung  
 
 #### Herausforderungen
@@ -183,12 +230,8 @@ Dabei Publisher können einen Preis pro erfolgreichem Crawl festlegen oder auch 
 - Mindestpreis: $0,01 pro erfolgreichem Crawl 
 
 ## Mögliche Frameworks/Tools
-<!-- Auch hier einmal vor der Auflistung 1-2 Sätze was diese ganzen Tools im generellen machen. Also warum man die nutzt -->
+Web‑Crawler‑ und Scraping‑Tools helfen dabei, große Mengen von Webseiten automatisiert zu durchsuchen, Inhalte zu extrahieren und ggf. in eine durchsuch- bzw. analysierbare Form zu bringen (z. B. strukturierte Datensätze oder Volltext‑Indizes). Man wählt ein Tool nach Programmiersprache, Skalierbarkeit und Bedarf an JavaScript‑Rendering.
 - Scrapy (Python): Weit verbreitetes Open-Source-Framework für Web-Crawling und -Scraping. Es ist schnell, flexibel und wird von einer großen Community gepflegt.
-- Crawler4j (Java): Einfacher Java-Crawler mit moderner API. Open Source, Multi-Thread-fähig und schnell einsetzbar.
-- Apache Nutch: Hochskalierbarer Java-Crawler auf Hadoop-Basis. Extrem anpassbar und für große Crawling-Jobs optimiert.
-- Heritrix: Vom Internet Archive entwickelter - Open-Source-Web-Crawler für Archivierungszwecke. Sehr skalierbar und erweiterbar („web-scale, archival-quality crawler“)
-- StormCrawler: Java-Framework für verteiltes Crawling mit Apache Storm. Skalierbar, echtzeit-fähig und modular für eigene Crawling-Pipelines
 - Headless-Browser/Browser-Automatisierung: Tools wie Puppeteer oder Selenium dienen zum Crawlen von JS-lastigen Seiten, indem sie einen echten Browser simulieren. Sie werden häufig zusammen mit klassischen Crawlern eingesetzt, um dynamische Inhalte zu erfassen.
 - Volltext-Engine (Indexierung): Für den Suchindex können auch spezialisierte Lösungen wie Elasticsearch oder Apache Solr genutzt werden. Diese bieten verteilte, hochperformante Indizes für Volltextsuche (oft in Kombination mit einem Crawler-Framework).
 ## Quellen
