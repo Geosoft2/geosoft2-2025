@@ -1,5 +1,7 @@
 # STAC API Spezifikation
 ### Unterschiede zur STAC-Spezifikation · Architektur & Endpunkte (ohne Erweiterungen) · Typische Anwendungsfälle
+**Kurs:** Geosoftware II, Wintersemester 2025/2026
+**Bearbeitet von:** Cedric Gräber[@cgraeber](https://github.com/graeberc), Maximilian Oliver Holtkamp[@MaxiKamp](https://github.com/MaxiKamp)
 
 ---
 
