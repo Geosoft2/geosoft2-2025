@@ -1,8 +1,6 @@
 # Crawling und Indexierung von Webinhalten
 Dieses Handout erklärt grundlegende Konzepte des Web-Crawlings und der Indexierung, Vergleich von Strategien, typische Herausforderungen und praxisnahe Tools.
 
-## Lernziele <!-- Wollen wir sowas machen? -->
-
 ## Crawling vs. Indexierung?
 Stellt dir das Web wie eine riesige Bibliothek ohne Ordnung und Struktur da: unzählige „Bücher“ (Webseiten), ständig neue Regale, dauernd Umbauten. Crawling ist das systematische „Durch-die-Regale-Gehen“. Ein Crawler startet mit ein paar bekannten Adressen (Seeds), lädt die Seite, liest Titel und Text, sammelt weitere Links wie Hinweise auf weitere Regale und packt die neue Adressen auf eine Warteliste. Dabei verhält er sich höflich indem er die robots.txt (Hausordnung der Website) respektiert. Das Ergebnis des Crawlings ist kein fertiges Suchsystem, sondern ein stetig wachsender Stapel von Dokumenten plus Metadaten (URL, Zeitpunkt, Sprache, evtl. letzte Änderung).
 
@@ -17,17 +15,17 @@ Anschließend wird die nächste URL aus der Frontier abgearbeitet. Dieser Prozes
 Die Frontier ist die zentrale Warteschlange eines Crawlers. Sie enthält URLs mit Metadaten (Depth, Host, Priorität, Timestamps) und steuert Reihenfolge und Tempo des Crawls. Übliche Queue‑Typen sind FIFO für breite Coverage, LIFO für tiefe Traversals und Priority‑Queues für scorebasierte Reihenfolgen. Prioritäten ergeben sich aus Tiefe, Linkkontext, Änderungsfrequenz oder Geschäftsregeln.
 
 ### Ablauf eines Crawlers
-1. **Start mit Seed‑URLs** \
+1. **Start mit Seed‑URLs**
     - Starte mit einer oder mehreren Anfangs‑URLs. Diese Seeds geben die Ausgangspunkte für den Crawl vor.
-2. **URL aus der Frontier auswählen und auf Höflichkeit prüfen** \
+2. **URL aus der Frontier auswählen und auf Höflichkeit prüfen**
     - Die nächste URL wird aus der Frontier entnommen. Vor dem Fetch prüft der Crawler robots.txt, Host‑Limits und Rate‑Limits.
-3. **Seite abrufen (HTTP‑Request)** \
+3. **Seite abrufen (HTTP‑Request)**
     - Der Crawler lädt die Ressource per HTTP(S). Dabei werden Statuscodes, Header (z. B. Last‑Modified, ETag) und mögliche Weiterleitungen beachtet.
-4. **Seite parsen** \
+4. **Seite parsen**
     - Der heruntergeladene Inhalt wird geparst. Bei Bedarf wird JavaScript gerendert (Headless‑Browser) oder API‑Endpunkte genutzt, um dynamisch nachgeladene Inhalte zu erfassen.
-5. **Text indizieren und Links extrahieren** \
+5. **Text indizieren und Links extrahieren**
     - Relevanter Text und Metadaten werden gespeichert oder an die Indexierung weitergegeben. Links, Media‑Referenzen und strukturierte Metadaten werden identifiziert und annotiert.
-6. **Neue Links normalisieren, deduplizieren und zur Frontier hinzufügen** \
+6. **Neue Links normalisieren, deduplizieren und zur Frontier hinzufügen**
     - Gefundene URLs werden normalisiert, auf Duplikate geprüft und gegebenenfalls priorisiert in die Frontier eingefügt. Fehlerhafte oder blockierte Links werden entsprechend behandelt.
 
 Der Prozess ist iterativ. Nach Schritt 6 beginnt der Crawler wieder bei Schritt 2 mit der nächsten URL aus der Frontier und läuft so lange, bis Abbruchbedingungen erreicht sind (Frontier leer, Budget/Limit erreicht, zeitliche Begrenzung oder manuelle Unterbrechung).
