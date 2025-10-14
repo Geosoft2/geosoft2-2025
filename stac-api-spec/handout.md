@@ -99,6 +99,14 @@ Diese Endpunkte entsprechen der **STAC API Core Specification**, ohne zusätzlic
 
 ## 6. Bedeutung für das Geosoftware-II-Projekt
 
+Der **STAC Index** dient als *Meta-Katalog* über viele bestehende STAC-APIs.
+Im Rahmen des Projekts soll dieser Index um eine **Collection Search** erweitert werden - das heißt, Benutzer sollen nicht nur einzelne Items finden, sonder gezielt nach *Collections* über mehrere APIs hinweg suchen können.
+
+Das Verständnis der **STAC API Architektur und ihrer Endpunkte** ist dafür essenziell:
+- um zu wissen, **welche Daten verfügbar** sind (`/collections`)
+- um zu verstehen, **wie Suchabfragen** funktionieren (`/search`)
+- um später **Aggregation und Indexierung** über viele APIs zu ermöglichen
+
 --- 
 
 ## 7. Quellen & weiterführende Literatur
