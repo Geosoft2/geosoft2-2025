@@ -176,31 +176,26 @@ Golden Images + Konfigurationsmanagement
 ### Portabilität & Kompatibilität
 
 - Container: Portabel über Hosts/Clouds, aber Kernel-abhängig
-
 - VMs: Komplettes OS – portabel über Hypervisor
 
 ### Speicher & Persistenz
 
 - Container: Layered File System (Copy-on-Write), Volumes
-
 - VMs: Virtuelle Platten (Snapshots, Live-Migration)
 
 ### Netzwerk
 
 - Container: Bridge/NAT, Overlay, Service Discovery, Network Policies
-
 - VMs: VLANs/SDN – traditioneller, aber weniger automatisiert
 
 ### Observability & Troubleshooting
 
 - Container: Standardisierte Logs (stdout/stderr), Prometheus, OpenTelemetry
-
 - VMs: Klassische Agenten und OS-spezifische Logs
 
 ### Kosten & Lizenzierung
 
 - Container: Ressourceneffizient, keine zusätzlichen OS-Lizenzen
-
 - VMs: Lizenzkosten und Management-Overhead
 
 ### Typische Einsatzszenarien
