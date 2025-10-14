@@ -10,6 +10,18 @@ STAC Tooling (bspw. STAC Index selber, STAC Browser, pystac, pystac-client, stac
 * Jonas Klaer, @BrokeJ
 * Georgios Voulgaris, @georgevoulg
 
+##
+Was ist STAC überhaupt?​
+STAC (SpatioTemporal Asset Catalog) ist ein Standardformat zur Beschreibung und Organisation von Erdbeobachtungsdaten wie Satellitenbildern, Drohnenaufnahmen oder Klimamodellen. Es legt fest, wie Metadaten – etwa zu Ort, Zeit, Sensor oder Auflösung – einheitlich strukturiert werden. Dadurch können Daten aus verschiedenen Quellen einfacher gefunden, durchsucht und kombiniert werden. Kurz gesagt: STAC sorgt dafür, dass Geodaten weltweit standardisiert, auffindbar und interoperabel bereitgestellt werden.
+
+## Warum STAC Tooling wichtig ist
+
+* **Einheitlicher Zugang** zu Geodaten durch offenen Standard
+* **Effiziente Verwaltung** und Validierung von Metadaten
+* **Interoperabilität** zwischen Plattformen und Programmiersprachen
+* **Skalierbare APIs** und Automatisierung durch Tools wie stac-fastapi und PgSTAC
+* **Grundlage** für Erweiterungen wie die Collection Search im Kursprojekt
+
 ## Wichtige Tools
 
 * [STAC Index](#stac-index)
@@ -150,13 +162,7 @@ map.addLayer(stac)
 
 ---
 
-## Warum STAC Tooling wichtig ist
 
-* **Einheitlicher Zugang** zu Geodaten durch offenen Standard
-* **Effiziente Verwaltung** und Validierung von Metadaten
-* **Interoperabilität** zwischen Plattformen und Programmiersprachen
-* **Skalierbare APIs** und Automatisierung durch Tools wie stac-fastapi und PgSTAC
-* **Grundlage** für Erweiterungen wie die Collection Search im Kursprojekt
 
 ---
 
