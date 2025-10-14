@@ -1,7 +1,7 @@
+# OGC Common Query Language 2 (CQL2) (#7)
+
 [@luis-waldi](https://github.com/luis-waldi)  
 [@nils-gb156](https://github.com/nils-gb156)  
-
-# OGC Common Query Language 2 (CQL2) (#7)
 
 ## 1. Einstieg & Motivation
 
@@ -137,3 +137,9 @@
 - Einheitliche Syntax für räumliche, zeitliche und logische Abfragen
 - Grundlage für moderne, standardisierte Geodatenabfragen
 - Verweis auf offizielle Dokumentation vom OGC [https://docs.ogc.org/is/21-065r2/21-065r2.html ](https://docs.ogc.org/is/21-065r2/21-065r2.html)
+
+## 8. Quellen
+
+- [https://www.ogc.org/standards/cql2](https://www.ogc.org/standards/cql2)
+- [https://www.ogc.org/announcement/ogc-membership-approves-common-query-language-cql2-as-an-official-ogc-standard](https://www.ogc.org/announcement/ogc-membership-approves-common-query-language-cql2-as-an-official-ogc-standard)
+- [https://docs.ogc.org/is/21-065r2/21-065r2.html](https://docs.ogc.org/is/21-065r2/21-065r2.html)
