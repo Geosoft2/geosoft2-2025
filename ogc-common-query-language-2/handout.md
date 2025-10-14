@@ -131,3 +131,9 @@
 - Gleiche Syntax -> kompatibel zwischen OGC API & STAC API
 
 ## 7. Fazit
+
+- Erhöht Interoperabilität zwischen STAC, OGC API & weiteren Diensten
+- Ablösung veralteter, komplexer XML-Filter
+- Einheitliche Syntax für räumliche, zeitliche und logische Abfragen
+- Grundlage für moderne, standardisierte Geodatenabfragen
+- Verweis auf offizielle Dokumentation vom OGC [https://docs.ogc.org/is/21-065r2/21-065r2.html ](https://docs.ogc.org/is/21-065r2/21-065r2.html)
