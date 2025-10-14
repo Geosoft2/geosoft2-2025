@@ -43,3 +43,17 @@ WebAssembly wird in modernen Web- und Cloud-Architekturen zunehmend eingesetzt. 
 | **Sichere Plugin-Systeme** | Ausführung von Fremdcode in isolierten WebAssembly-Sandboxes, etwa für benutzerdefinierte Analysen oder Erweiterungen. Das strikte Speichermodell unterstützt die Sicherheit. |
 
 Zudem ist festzuhalten, dass WebAssembly nicht nur eine Performance-Optimierung darstellt, sondern eine architektonische Option zur Gestaltung verteilter, portabler und sicherer Softwaresysteme bietet.
+
+# **Quellen**
+
+- Haas, A. et al. (2017): Bringing the Web up to Speed with WebAssembly. https://people.mpi-sws.org/~rossberg/papers/Haas,%20Rossberg,%20Schuff,%20Titzer,%20Gohman,%20Wagner,%20Zakai,%20Bastien,%20Holman%20-%20Bringing%20the%20Web%20up%20to%20Speed%20with%20WebAssembly.pdf (Zuletzt aufgerufen am 14.10.2025).
+
+- Fraunhofer IESE (o. J.): WebAssembly: Grundlagen von Wasm. https://www.iese.fraunhofer.de/blog/webassembly-grundlagen-von-wasm/ (Zuletzt aufgerufen am 14.10.2025).
+
+- developer.mozilla.org (o. J.): WebAssembly. MDN Web Docs. https://developer.mozilla.org/en-US/docs/WebAssembly (Zuletzt aufgerufen am 14.10.2025).
+
+- Rossberg, A. (2025): WebAssembly Specification Release 3.0. (Wurde als lokale Datei übermittelt, kann aber über die Community Group bezogen werden). https://webassembly.org/ (Zuletzt aufgerufen am 14.10.2025).
+
+- Schmid, F. et al. (2020): Unleashing the Power of WebAssembly. https://www.software-lab.org/publications/usenixSec2020-WebAssembly.pdf (Zuletzt aufgerufen am 14.10.2025).
+
+- webassembly.org (o. J.): WebAssembly Homepage. https://webassembly.org/ (Zuletzt aufgerufen am 14.10.2025).
