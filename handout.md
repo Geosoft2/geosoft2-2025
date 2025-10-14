@@ -1,6 +1,6 @@
 # Container/Docker
 ---
-[@SonkeHoffmann](https://github.com/SonkeHoffmann), [@Luisa-SP](https://github.com/Luisa-Sp)
+[@Sönke Hoffmann](https://github.com/SonkeHoffmann), [@Luisa SPieker](https://github.com/Luisa-Sp)
 
 ## Was ist Containerisierung?
 
