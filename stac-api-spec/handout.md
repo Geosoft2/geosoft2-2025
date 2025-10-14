@@ -37,17 +37,17 @@ Sie definiert den Kern (Core), auf den Erweiterungen aufsetzen können (z.B. Fil
 
 ### Komponenten der Architektur
 
--**Landing Page (`/`)**
+- **Landing Page (`/`)**
  Einstiegspunkt der API mit Links zu den wichtigsten Ressourcen.
 
--**Collections (`/collections`, `/collections/{collectionId}`)**
+- **Collections (`/collections`, `/collections/{collectionId}`)**
  Beschreiben Datensammlungen (z.B. Sentinel-2, Landsat-8).
  Enthalten Metadaten wie räumliche/zeitliche Abdeckung, Lizenz, Assets.
 
--**Items (`/collections/{collectionId}items`)**
+- **Items (`/collections/{collectionId}items`)**
  Repräsentieren einzelne Beobachtungen oder Dateien innerhalb einer Collection.
 
--**Search (`/search`)**
+- **Search (`/search`)**
  Zentrales Feature zur Abfrage von Items anhand von Filtern:
  ```bash
   /search
@@ -78,13 +78,13 @@ Diese Endpunkte entsprechen der **STAC API Core Specification**, ohne zusätzlic
 ## 5. Typische Anwendungsfälle
 
 ### STAC API (dynamisch)
--**Interaktive Datensuche:** Clients (z.B. QGIS, Python-Skripte, Jupyter Notebooks) können Datensätze nach Raum, Zeit oder Attributen abfragen.
--**Automatisierte Workflows:** Verarbeitungspipelines können API-Aufrufe automatisch durchführen (z.B. tägliche Datenupdates).
--**Integration:** REST/JSON-Schnittstellen lassen sich leicht in Web- oder Desktop-Anwendungen integrieren.
+- **Interaktive Datensuche:** Clients (z.B. QGIS, Python-Skripte, Jupyter Notebooks) können Datensätze nach Raum, Zeit oder Attributen abfragen.
+- **Automatisierte Workflows:** Verarbeitungspipelines können API-Aufrufe automatisch durchführen (z.B. tägliche Datenupdates).  
+- **Integration:** REST/JSON-Schnittstellen lassen sich leicht in Web- oder Desktop-Anwendungen integrieren.
 
 ### STAC (statisch)
--**Dokumentation & Open Data-Kataloge:** Leichtgewichtige Veröffentlichung kleiner oder fixer Datensammlungen, z.B. Forschungsprojekte.
--**Offline-Nutzung:** STAC-Dateien (JSON) können ohne Serverinfrastruktur genutzt werden.
+- **Dokumentation & Open Data-Kataloge:** Leichtgewichtige Veröffentlichung kleiner oder fixer Datensammlungen, z.B. Forschungsprojekte.  
+- **Offline-Nutzung:** STAC-Dateien (JSON) können ohne Serverinfrastruktur genutzt werden.
 
 ### Vergleich
 
