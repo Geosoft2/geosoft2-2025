@@ -45,7 +45,8 @@ docker run -p 8080:80 myapp
 ```
 
 ### Typische Anwendungsfälle für Docker
-Entwicklung & Test (Development & Testing)
+
+**Entwicklung & Test (Development & Testing)**
 
 Einheitliche Entwicklungsumgebung
 Entwickler arbeiten oft mit unterschiedlichen Betriebssystemen und Toolchains.
@@ -234,20 +235,23 @@ Golden Images + Konfigurationsmanagement
 | **Hoch stateful + Migration**    | VM                             |
 | **Hohe Sicherheitsanforderungen**| gVisor / Kata / Firecracker    |
 
-## Mini-Beispiel (GIS)
 
-Containerisiert:
+## Beispielhafte GIS-Architektur mit Containern
 
-- postgis (DB)
-- geoserver (WMS/WFS)
-- mapproxy / tileserver (Caching)
-- frontend (React / Leaflet)
+In einer typischen containerisierten GIS-Umgebung könnten folgende Komponenten eingesetzt werden:
+
+- **PostGIS** (Datenbank)
+- **GeoServer** (WMS/WFS-Dienste)
+- **MapProxy** oder **TileServer** (Caching)
+- **Frontend** (z. B. React / Leaflet)
 
 **Vorteile:**
-Jeder Dienst skalierbar, updatesicher und reproduzierbar.
+Jeder Dienst läuft in seinem eigenen Container, ist skalierbar, updatesicher und reproduzierbar.  
+So lassen sich komplexe GIS-Systeme modular und wartungsfreundlich betreiben.
 
-Als VM:
-Ein Monolith mit allen Komponenten im selben OS – für harte Segmentierung oder Legacy-Abhängigkeiten.
+**Alternative (VM-basiert):**
+Ein Monolith mit allen Komponenten in einer einzelnen virtuellen Maschine – geeignet für Legacy-Systeme oder Umgebungen mit strikter Segmentierung.
+
 
 ---
 
