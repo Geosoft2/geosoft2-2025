@@ -1,7 +1,6 @@
 # Container/Docker
 ---
-@SonkeHoffmann
-@Luisa-SP
+[@SonkeHoffmann](https://github.com/SonkeHoffmann), [@Luisa-SP](https://github.com/Luisa-Sp)
 
 ## Was ist Containerisierung?
 
@@ -256,7 +255,7 @@ Podman (Pod Manager) ist ein containerbasiertes Tool von Red Hat, das – ähnli
 Es ist vollständig kompatibel mit Docker-Images und Dockerfiles, aber verfolgt einen etwas anderen Ansatz in Architektur und Sicherheit.
 Außerdem ist Podman komplett Open Source und steht unter einer Apache 2.0-Lizenz, was es besonders für Forschung, Lehre und offene Softwareprojekte attraktiv macht.
 
-## Grundlagen von Podman
+### Grundlagen von Podman
 
 Podman ist ein Tool zur Erstellung, Verwaltung und Ausführung von Containern – ganz ohne zentralen Daemon.  
 Es arbeitet nach dem gleichen **Image → Container**-Prinzip wie Docker und nutzt dabei dieselben **OCI-Standards** (Open Container Initiative).
@@ -297,7 +296,7 @@ podman run -p 8080:80 myapp
 | **Orchestrierung** | Docker Compose / Swarm / Kubernetes | Pods nativ wie in Kubernetes, unterstützt `podman kube generate` |
 | **API / Remote Control** | Docker-API (REST) | Podman-API (Socket, kompatibel mit Docker-Clients) |
 
-### Beispiel: Gleiche Befehle wie bei Docker
+### Beispiel für gleiche Befehle wie bei Docker
 
 Podman ist CLI-kompatibel mit Docker, d. h. du kannst fast alle Docker-Befehle identisch verwenden:
 ```bash
@@ -308,7 +307,7 @@ podman images
 
 # man kann auch
 alias docker=podman
-# nutzen und die Docker-Workflows direkt weiterverwenden.
+# nutzen und die Docker-Workflows direkt weiterverwenden
 ```
 ### Pods und Kubernetes
 
@@ -348,4 +347,4 @@ Podman kann automatisch Systemd-Service-Dateien generieren, um Container oder Po
 
   # Quellen
 Die vollständigen Quellen und weiterführende Literatur zu Docker, Containerisierung und Podman  
-finden sich in der separaten Datei 👉 [sources.md](./sources.md)
+finden sich in der separaten Datei: [sources.md](./sources.md)
