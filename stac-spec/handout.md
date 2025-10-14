@@ -176,14 +176,6 @@ Verwendung:
 
 *Weitere Informationen:* [extensions](https://github.com/radiantearth/stac-spec/tree/master/extensions)
 
-## Beispiel
-
----
-
-### Zweck:
-
-
-
 ---
 
 ## Vorteile von STAC
@@ -204,3 +196,4 @@ Offener Standard mit breiter Community und Tool-Unterstützung
 - STAC Spec Repository auf GitHub: https://github.com/radiantearth/stac-spec
 - STAC Specification: https://stacspec.org/en
 - EO College – The STAC Catalog: https://eo-college.org/topics/the-stac-catalog/
+
