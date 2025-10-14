@@ -44,7 +44,7 @@ docker run -p 8080:80 myapp
 
 ```
 
-## Typische Anwendungsfälle für Docker
+### Typische Anwendungsfälle für Docker
 Entwicklung & Test (Development & Testing)
 
 Einheitliche Entwicklungsumgebung
@@ -139,11 +139,13 @@ Architektur – wo wird isoliert?
 
 **Fazit:** Container sind leichter und starten schneller, VMs bieten stärkere Isolation.
 
-Startzeit, Dichte & Overhead
-Kategorie	Container	Virtuelle Maschinen
-Startzeit	Sekunden	Minuten
-Ressourcendichte	Hoch	Gering
-Performance	Nahe nativ	Minimaler Overhead
+### Startzeit, Dichte & Overhead
+
+| **Kategorie**       | **Container**     | **Virtuelle Maschinen** |
+|----------------------|------------------|--------------------------|
+| **Startzeit**        | Sekunden         | Minuten                  |
+| **Ressourcendichte** | Hoch             | Gering                   |
+| **Performance**      | Nahe nativ       | Minimaler Overhead       |
 
 ### Isolation & Sicherheit
 
@@ -221,14 +223,16 @@ Golden Images + Konfigurationsmanagement
 - Container in VMs: Standard in der Cloud (z. B. Kubernetes-Worker in VMs)
 - MicroVMs (Firecracker): Leichte VMs für Serverless/FaaS
 
-Praxis-Guidelines
-Szenario	Empfehlung
-Microservices & CI/CD	Container
-Strikte Mandantentrennung	VM oder MicroVM
-Legacy / Treiberlastig	VM
-Kurze Build-/Test-Jobs	Container
-Hoch stateful + Migration	VM
-Hohe Sicherheitsanforderungen	gVisor/Kata/Firecracker
+### Praxis-Guidelines
+
+| **Szenario**                     | **Empfehlung**                 |
+|----------------------------------|--------------------------------|
+| **Microservices & CI/CD**        | Container                      |
+| **Strikte Mandantentrennung**    | VM oder MicroVM                |
+| **Legacy / Treiberlastig**       | VM                             |
+| **Kurze Build- / Test-Jobs**     | Container                      |
+| **Hoch stateful + Migration**    | VM                             |
+| **Hohe Sicherheitsanforderungen**| gVisor / Kata / Firecracker    |
 
 ## Mini-Beispiel (GIS)
 
