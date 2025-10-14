@@ -167,20 +167,18 @@ map.addLayer(stac)
 
 ## Fazit
 
-STAC schafft einen gemeinsamen Standard, um Geodaten – also etwa Satellitenbilder oder Klimadaten – weltweit besser nutzbar zu machen.
-
+*STAC schafft einen gemeinsamen Standard, um Geodaten – also etwa Satellitenbilder oder Klimadaten – weltweit besser nutzbar zu machen.
  Dadurch werden Daten auffindbar, durchsuchbar und leicht wiederverwendbar.
 
-Die verschiedenen Tools setzen diesen Standard in der Praxis um:
-
+*Die verschiedenen Tools setzen diesen Standard in der Praxis um:
  Der STAC Index bietet einen zentralen Überblick über verfügbare Kataloge und APIs.
 
- Mit dem STAC Browser kann man Daten einfach visuell durchsuchen.
+* Mit dem STAC Browser kann man Daten einfach visuell durchsuchen.
 
- PySTAC und der PySTAC Client sind ideal, wenn man programmatisch mit STAC-Daten arbeiten möchte – zum Beispiel in Python.
+* PySTAC und der PySTAC Client sind ideal, wenn man programmatisch mit STAC-Daten arbeiten möchte – zum Beispiel in Python.
 
- Und mit STAC-js oder ol-STAC lassen sich die Daten direkt in Webanwendungen oder Karten integrieren.
-
+* Mit STAC-js oder ol-STAC lassen sich die Daten direkt in Webanwendungen oder Karten integrieren.
+ 
 Insgesamt erleichtern die Tools die Zusammenarbeit zwischen Datenanbietern und Nutzern und sorgen dafür, dass Geodaten nicht nur irgendwo gespeichert, sondern wirklich nutzbar werden.
 
  Kurz gesagt: STAC ist die Brücke zwischen riesigen Datenmengen und ihrer praktischen Anwendung.
