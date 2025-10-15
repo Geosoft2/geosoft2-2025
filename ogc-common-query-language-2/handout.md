@@ -5,34 +5,26 @@
 
 ## 1. Einstieg & Motivation
 
+### Leitfrage:
+
+Stell euch vor, ihr wollt alle Sentinel-2-Bilder über Münster, mit weniger als 10% Wolken finden.  
+Klingt einfach, war aber technisch lange kompliziert. Jede API hatte ihre eigene Sprache, eigene Filter, eigene Syntax.  
+Hier setzt CQL2 an.
+
 ### Warum brauchen wir CQL2?
 
-- Filtern ist zentrale Operation zur Auswahl von Teilmengen
+- Filtern ist eine Grundfunktion in Geodaten-APIs
 - Alte OGC-Standards (Filter Encoding, CQL 1) sind komplex, XML-basiert, schwer erweiterbar
-- CQL2 als einheitliche, moderne Filtersprache für OGC-APIs
-- Zwei Varianten: Text-Encoding & JSON-Encoding
-- Formalisierte Weiterentwicklung der ursprünglichen Common Query Language
-- Offizieller OGC-Standard (Version 1.0.0, 2024)
-
-### Ziele von CQL2
-
-- Interoperable & verständliche Filterausdrücke
-- Ergebnis pro Objekt: TRUE / FALSE / NULL (nur TRUE im Resultset)
-- Text-Encoding für HTTP GET (?filter=...)
-- JSON-Encoding für HTTP POST (Request-Body)
-- Formale Definition: BNF (Text) & JSON Schema (JSON)
-- Modularer Aufbau mit Requirements Classes:
-  Basic, Advanced Comparisons, Spatial, Temporal, Arrays, Functions
+- Web-APIs brauchen eine einfache und einheitliche Filtersprache
+- CQL2: kompakt, verständlich und interoperabel – die moderne Weiterentwicklung
+- Ziel: Einheitliche Filterlogik für STAC & OGC API & andere Dienste
 
 ## 2. Was ist CQL2?
 
-- OGC-Standard zur Formulierung boolescher Filter für räumlich-zeitliche Daten
-- Unterstützt Vergleichs-, räumliche, zeitliche & logische Operatoren
-- Zwei interoperable Encodings: cql2-text & cql2-json
-- Typische Anwendung: Auswahl von Ressourcen in Query-Operationen
-- (z. B. OGC API – Features oder STAC-Suche)
-- Auch nutzbar für andere Operationen (z. B. Filter bei Updates)
-- Revision der ursprünglichen CQL aus dem Catalogue Service erstmals formal spezifiziert
+- Offizieller OGC-Standard für Filterausdrücke (Version 1.0, 2024)
+- Ermöglicht logische, räumliche & zeitliche Abfragen
+- Zwei Schreibweisen: Text vs. JSON
+- Standardisiert und kompatibel mit STAC & OGC API
 
 ## 3. Syntaxvarianten (Text vs JSON)
 
