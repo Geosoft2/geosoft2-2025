@@ -110,7 +110,8 @@ import { buildCollectionQuery } from "./searchUtils.js";
 test("buildCollectionQuery creates a regex filter", () => {
   const query = buildCollectionQuery("landsat");
   expect(query).toEqual({ name: { $regex: "landsat", $options: "i" } });
-});```
+});
+```
 
 Keine echte API, kein Serverstart.
 
