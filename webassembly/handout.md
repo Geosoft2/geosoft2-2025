@@ -44,6 +44,34 @@ WebAssembly wird in modernen Web- und Cloud-Architekturen zunehmend eingesetzt. 
 
 Zudem ist festzuhalten, dass WebAssembly nicht nur eine Performance-Optimierung darstellt, sondern eine architektonische Option zur Gestaltung verteilter, portabler und sicherer Softwaresysteme bietet.
 
+## Relevante Bibliotheken und Tools
+
+| Kategorie | Name | Beschreibung |
+| :--- | :--- | :--- |
+| **Wasm Geospatial Core** | **GEOS-WASM** | WebAssembly-Build der C++ Geospatial Library GEOS. Ermöglicht Low-Level-Geometrieoperationen mit Near-Native-Performance. Essenziell für die effiziente Verarbeitung der STAC Item-Geometrien. |
+| **Wasm Geospatial Tools** | **wasm-pack** | Die zentrale Toolchain für die Kompilierung von Rust-Code nach WebAssembly und die Generierung der JavaScript-Schnittstellen. |
+| **Wasm Geospatial Tools** | **Emscripten** | Standard-Toolchain zur Kompilierung von C/C++-Code nach Wasm. Essentiell für die Portierung etablierter C-Bibliotheken. |
+| **STAC Utility (Backend)** | **PySTAC**, **stac-fastapi** | Frameworks zur Erstellung, Validierung und Bereitstellung von STAC Katalogen. Liefern die optimierte Datengrundlage für die clientseitige Wasm-optimierte Suche. |
+
+---
+
+## 4. Fazit
+
+### Fazit
+
+WebAssembly ist eine architektonische Schlüsseltechnologie für die moderne Geosoftware-Entwicklung, insbesondere im Umgang mit STAC.
+
+1.  **Performance:** Wasm schließt die Performancelücke von JavaScript, indem es GIS-typische, rechenintensive Operationen im Browser mit Near-Native-Performance ermöglicht.
+2.  **Skalierbarkeit & Kosteneffizienz:** Durch die Auslagerung der Rechenlast auf den Client entlastet Wasm die STAC API Server. Dies ist entscheidend für die Skalierbarkeit im Umgang mit großen STAC-Katalogen.
+3.  **Wiederverwendung:** Wasm ermöglicht es, etablierte, hochoptimierte GIS-Bibliotheken direkt im Web wiederzuverwenden.
+
+
+
+---
+
+
+
+
 # **Quellen**
 
 - Haas, A. et al. (2017): Bringing the Web up to Speed with WebAssembly. https://people.mpi-sws.org/~rossberg/papers/Haas,%20Rossberg,%20Schuff,%20Titzer,%20Gohman,%20Wagner,%20Zakai,%20Bastien,%20Holman%20-%20Bringing%20the%20Web%20up%20to%20Speed%20with%20WebAssembly.pdf (Zuletzt aufgerufen am 14.10.2025).
@@ -57,3 +85,13 @@ Zudem ist festzuhalten, dass WebAssembly nicht nur eine Performance-Optimierung 
 - Schmid, F. et al. (2020): Unleashing the Power of WebAssembly. https://www.software-lab.org/publications/usenixSec2020-WebAssembly.pdf (Zuletzt aufgerufen am 14.10.2025).
 
 - webassembly.org (o. J.): WebAssembly Homepage. https://webassembly.org/ (Zuletzt aufgerufen am 14.10.2025).
+
+- Healey, A. (2020). WebAssembly Search Tools for Static Sites. [healeycodes.com.](https://healeycodes.com/webassembly-search-tools-for-static-websites) (Zuletzt aufgerufen am 14.10.2025).
+
+- Chrispahm. (2024). GEOS-WASM. GitHub Page. https://chrispahm.github.io/geos-wasm/ (Zuletzt aufgerufen am 14.10.2025).
+
+- De Melo, L. (2024). Real-Time Geospatial Intelligence: Leveraging Rust WebAssembly and Predictive AI for Browser-Based Spatial Queries. [Medium.](https://medium.com/@LeonardoDeMeloWeb/real-time-geospatial-intelligence-leveraging-rust-webassembly-and-predictive-ai-for-browser-based-a608ca5ed7c2) (Zuletzt aufgerufen am 14.10.2025).
+
+- STAC Specification. (2024). Create a STAC Catalog with a Collection Using PySTAC. [stacspec.org.](https://stacspec.org/en) (Zuletzt aufgerufen am 14.10.2025).
+
+- Sparkgeo. (2024). Introducing stac-fastapi-indexed: Low Overhead STAC Metadata Support. [Sparkgeo Blog.](https://sparkgeo.com/blog/introducing-stac-fastapi-indexed-low-overhead-stac-metadata-support/) (Zuletzt aufgerufen am 14.10.2025).
