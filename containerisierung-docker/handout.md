@@ -2,6 +2,8 @@
 ---
 [@Sönke Hoffmann](https://github.com/SonkeHoffmann), [@Luisa Spieker](https://github.com/Luisa-Sp)
 
+---
+
 ## Was ist Containerisierung?
 
 **Definition:**  
