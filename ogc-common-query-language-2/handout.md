@@ -124,10 +124,11 @@ Hier setzt CQL2 an.
 
 ## 7. Fazit
 
-- Erhöht Interoperabilität zwischen STAC, OGC API & weiteren Diensten
-- Ablösung veralteter, komplexer XML-Filter
-- Einheitliche Syntax für räumliche, zeitliche und logische Abfragen
-- Grundlage für moderne, standardisierte Geodatenabfragen
+- Einheitliche, moderne Filtersprache für alle OGC-konformen Dienste
+- Erhöht Interoperabilität: einmal formulieren --> überall nutzbar
+- Verständlich für Menschen (Text) & Maschinen (JSON)
+- Ablösen komplexer XML-Filter älterer Standards
+- Grundlage für präzise, standardisierte Geodatenabfragen (z. B. in STAC, OGC API)
 - Verweis auf offizielle Dokumentation vom OGC [https://docs.ogc.org/is/21-065r2/21-065r2.html ](https://docs.ogc.org/is/21-065r2/21-065r2.html)
 
 ## 8. Quellen
