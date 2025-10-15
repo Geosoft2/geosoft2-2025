@@ -1,4 +1,5 @@
-[handout.md](https://github.com/user-attachments/files/22926116/handout.md)
+
+[handout.md](https://github.com/user-attachments/files/22926226/handout.md)
 @<VincentKuehn>
 
 # Testing – Test-Driven Development; Unit vs. Integration Testing; Common Test Software
@@ -109,7 +110,7 @@ import { buildCollectionQuery } from "./searchUtils.js";
 test("buildCollectionQuery creates a regex filter", () => {
   const query = buildCollectionQuery("landsat");
   expect(query).toEqual({ name: { $regex: "landsat", $options: "i" } });
-});
+});```
 
 Keine echte API, kein Serverstart.
 
