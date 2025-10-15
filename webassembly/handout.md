@@ -38,7 +38,7 @@ Damit adressiert WebAssembly zentrale Herausforderungen moderner Softwareentwick
 
 WebAssembly wird in modernen Web- und Cloud-Architekturen zunehmend eingesetzt. Es eignet sich für eine leistungsfähige, sichere und portable Ausführung komplexer Anwendungen. Die folgende Kategorisierung fasst wichtige Einsatzfelder zusammen:
 
-| Feld | Beschreibung & Vorteile |
+| Anwendungsfall | Beschreibung |
 | :--- | :--- |
 | **Datenintensive Anwendungen** | Verarbeitung großer Datenmengen (z. B. Geodatenanalyse, wissenschaftliche Simulationen) direkt auf dem Client. |
 | **Portierung bestehender Software** | Wiederverwendung von in C/C++ oder Rust geschriebenen Modulen in Webumgebungen, ohne diese neu implementieren zu müssen. So lassen sich etablierte und optimierte Codebasen weiterverwenden. |
@@ -82,9 +82,9 @@ Die breite Akzeptanz von WebAssembly in der Industrie dient als Beleg für seine
 ---
 
 
-## **WebAssembly vs. JavaScript**
+## **WebAssembly vs JavaScript**
 
-Obwohl beide Technologien zentral für das moderne Web sind und häufig zusammenarbeiten, erfüllen sie unterschiedliche Rollen.
+Obwohl beide Technologien zentral für das moderne Web sind und häufig zusammenarbeiten, erfüllen sie unterschiedliche Rollen:
 
 - JavaScript eignet sich hervorragend für die allgemeine Webentwicklung und insbesondere für interaktive Aufgaben wie die DOM-Manipulation.
 
