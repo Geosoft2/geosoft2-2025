@@ -1,4 +1,4 @@
-@RobinGummels @Mammutor
+[@RobinGummels](https://github.com/RobinGummels) [@Mammutor](https://github.com/Mammutor)
 # Crawling und Indexierung von Webinhalten
 Dieses Handout erklärt grundlegende Konzepte des Web-Crawlings und der Indexierung, Vergleich von Strategien, typische Herausforderungen und praxisnahe Tools.
 
