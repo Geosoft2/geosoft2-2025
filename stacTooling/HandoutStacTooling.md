@@ -29,6 +29,8 @@ STAC (SpatioTemporal Asset Catalog) ist ein Standardformat zur Beschreibung und 
 * [STAC-js](#stac-js)
 * [OL-STAC](#ol-stac)
 
+! Weitere Tools findet man [hier](https://stacspec.org/en/about/tools-resources/). !
+
 ---
 
 ## STAC Index
