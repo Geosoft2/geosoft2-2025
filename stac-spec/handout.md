@@ -21,7 +21,7 @@ STAC stellt sicher, dass raum-zeitliche Assets leicht auffindbar, zugänglich un
 ### Strukturelle Komponenten
 
 Die STAC-Spezifikation besteht aus 3 zentralen Komponenten. Jede Komponente kann einzeln benutzt werden, aber sie funktionieren am sinnvollsten zusammen.
-Die Komponenten folgen einer hierachischen Struktur, wodurch Geodaten auch vollständig statisch organisiert werden können.
+Die Komponenten folgen einer hierarchischen Struktur, wodurch Geodaten auch vollständig statisch organisiert werden können.
 
 ---
 
@@ -43,9 +43,23 @@ Es basiert auf einem GeoJSON Feature, das um zusätzliche Felder erweitert wird.
 | bbox         | Bounding Box (minimales umschließendes Rechteck) |
 | properties.datetime    | Zeitpunkt der Datenerfassung                  |
 | links       | Verweise auf Collection oder verwandte Items |
-| assets       | Tatsächliche Datenfiles (z. B. Satellitenbilder) |
+| assets       | Tatsächliche Datenressource (z. B. Satellitenbilder) |
 | collection  | Optional: ID der Collection, zu der das Item gehört |
-|weitere Felder| ... | 
+|weitere Felder| ... |  
+
+**Beispiel:**
+```json
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "id": "example-item",
+  "geometry": { "type": "Point", "coordinates": [7.0, 51.0] },
+  "bbox": [7.0, 51.0, 7.0, 51.0],
+  "properties": { "datetime": "2020-01-01T00:00:00Z" },
+  "assets": { "image": { "href": "https://example.com/image.tif", "type": "image/tiff" } },
+  "links": []
+}
+```   
 
 *Weitere Informationen:* [item-spec](https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md)
 
@@ -59,7 +73,7 @@ Eine Collection beschreibt eine Gruppe verwandter Items mit gemeinsamen Metadate
 - Anbieter​
 - Zusammenfassungen​
 
-Eine Collection kann sowohl übergeordnete (parent) Catalog- oder Collection-Objekte haben als auch untergeordnete (child) Item-, Catalog- oder Collection-Objekte.​
+Eine Collection kann sowohl übergeordnete (parent) Catalog- oder Collection-Objekte haben als auch untergeordnete (child) Item- oder Collection-Objekte.​
 
 **Felder:**
 
@@ -76,7 +90,23 @@ Eine Collection kann sowohl übergeordnete (parent) Catalog- oder Collection-Obj
 | keywords | Optional: Schlüsselwörter zur Beschreibung           |
 | providers | Optional: Information zum Datenanbieter             |
 | summaries | Optional: Zusammenfassungen von Eigentschaften der enthaltenen Items             |
-| weitere Felder | ... |
+| weitere Felder | ... |  
+
+**Beispiel:**
+```json
+{
+  "stac_version": "1.0.0",
+  "type": "Collection",
+  "id": "example-collection",
+  "description": "Example collection of satellite images.",
+  "license": "CC-BY-4.0",
+  "extent": {
+    "spatial": { "bbox": [[6.0, 50.0, 8.0, 52.0]] },
+    "temporal": { "interval": [["2020-01-01T00:00:00Z", null]] }
+  },
+  "links": []
+}
+```
 
 *Weitere Informationen:* [collection-spec](https://github.com/radiantearth/stac-spec/tree/master/collection-spec)
 
@@ -100,33 +130,44 @@ Ziele:
 | description  | Kurze Beschreibung des Inhalts                |
 | links        | Verweise auf untergeordnete Objekte (Items, Collections, Catalogs) |
 | title | Optional: kurzer Titel des Katalogs              |
-|weitere Felder | ... |
+|weitere Felder | ... |  
+
+**Beispiel:**
+```json
+{
+  "stac_version": "1.0.0",
+  "id": "example-catalog",
+  "type": "Catalog",
+  "description": "Top-level STAC catalog example.",
+  "links": [
+    { "rel": "child", "href": "./example-collection.json", "type": "application/json" }
+  ]
+}
+```
 
 *Weitere Informationen:* [catalog-spec](https://github.com/radiantearth/stac-spec/tree/master/catalog-spec)
 
 ---
 
 ### Inhaltliche Komponenten
-Des weiteren gibt es noch die inhaltlichen Komponenten, die innerhalb der strukturellen Komponenten vorkommen und Informationen oder Verknüpfungen bereitstellen:  
+Des Weiteren gibt es noch die inhaltlichen Komponenten, die innerhalb der strukturellen Komponenten vorkommen und Informationen oder Verknüpfungen bereitstellen:  
 
 ---
 
 ### `Asset`
-Das eigentliche Datenobjekt, auf das ein Item verweist (z. B. Bilddatei, GeoTIFF, NetCDF). Jedes Asset ist über eine URL erreichbar und enthält Metadaten wie:
-- Dateiformat
-- Rolle oder Zweck (z. B. „thumbnail“, „data“, „metadata“)
-- MIME-Typ  
+Ein Asset ist das eigentliche Datenobjekt, auf das ein Item verweist (z. B. Bilddatei, GeoTIFF, NetCDF). Jedes Asset ist über eine URL erreichbar und enthält Metadaten wie:
+- Format/Typ der Datei
+- Rolle oder Zweck (z. B. „thumbnail“, „data“, „metadata“)  
 
-Assets sind also die Datenressourcen, während das Item ihre Metadatenbeschreibung bereitstellt.
-
+Assets sind also die Datenressourcen, während das Item deren Metadatenbeschreibung bereitstellt.
 
 | Feld         | Beschreibung |
 |--------------|-------------|
-| href      | Pfad oder URL zur Datei |
+| href       | Pfad oder URL zur Datei |
 | type       | Medientyp der Datei (z. B. "image/tiff") |
-| title      | Kurzer Titel des Assets (empfohlen) |
-| roles      | Rolle des Assets, wofür wird es verwendet (z. B. "thumbnail", "data") (optional, aber üblich) |
-| description| Längere Beschreibung des Assets (optional) |
+| title      | Optional: Kurzer Titel des Assets  |
+| roles      | Optional: Rolle des Assets, wofür wird es verwendet (z. B. "thumbnail", "data") |
+| description| Optional: Längere Beschreibung des Assets |
 |weitere Felder | ... | 
 
 *Weitere Informationen*: [assets](https://github.com/radiantearth/stac-spec/blob/master/commons/assets.md)
@@ -141,8 +182,8 @@ Er ermöglicht die Navigation innerhalb der STAC-Struktur und beschreibt die log
 |------------|-------------|
 | href     | URL oder Pfad zum Zielobjekt |
 | rel      | Beziehungstyp des Links (z. B. "self", "parent", "collection") |
-| type     | Medientyp des Zielobjekts (optional, empfohlen) |
-| title    | Kurzbeschreibung des Links (optional) |
+| type     | Optional: Medientyp des Zielobjekts |
+| title    | Optional: Kurzbeschreibung des Links  |
 |weitere Felder | ... |
 
 *Weitere Informationen:* [links](https://github.com/radiantearth/stac-spec/blob/master/commons/links.md)
@@ -155,7 +196,7 @@ Er ermöglicht die Navigation innerhalb der STAC-Struktur und beschreibt die log
 ## STAC-Erweiterungen (Extensions)
 
 STAC soll bewusst minimalistisch sein und kann über Erweiterungen mit zusätzlichen Funktionalitäten ergänzt werden. So kann eine große Bandbreite an Anwendungsfällen unterstützt werden.
-Erweiterungen (Extensions) fügen der Kernstruktur zusätzliche Funktionalitäten hinzu, z. B. Sensorinformationen, Wolkenbedeckung oder detaillierte Zeit-/Raumangaben. Sie bleiben kompatibel mit der Basisstruktur und werden als eigenständige JSON-Schemas implementiert.
+Erweiterungen (Extensions) fügen der Kernstruktur zusätzliche Funktionalitäten hinzu, z. B. Sensorinformationen, Wolkenbedeckung oder detaillierte Zeit-/Raumangaben. Sie bleiben kompatibel mit der Basisstruktur und werden als eigenständige JSON-Schemata implementiert.
 
 Verwendung: 
 - im STAC-Objekt können die Erweiterungen im Feld `stac_extensions` aufgelistet werden
@@ -167,12 +208,12 @@ Verwendung:
 
 | Extension | Anwendungsbereich | Beispielhafte Felder | Beschreibung |
 |----------------|-------------------------------|---------------------------|-------------------|
-| `eo`  | Multi-spektrale Satellitendaten (z. B. Sentinel-2, Landsat) | `eo:bands`, `eo:cloud_cover`, `eo:sun_azimuth` | Beschreibt spektrale Bänder, Sensorparameter und Wolkenbedeckung für optische Erdbeobachtungsdaten. |
-| `sar` | Radar-Daten (z. B. Sentinel-1) | `sar:polarizations`, `sar:frequency_band`, `sar:product_type` | Ergänzt Metadaten zu Polarisation, Frequenzband und Produkttyp für SAR-Daten. |
-| `pointcloud` | 3D-Daten / LiDAR / Drohnenbefliegungen | `pc:type`, `pc:count`, `pc:density` | Beschreibt Punktwolken mit Angaben zu Punktanzahl, Dichte und Klassifizierung. |
-| `datacube` | Zeitreihen-, Klima- und Wetterdaten | `cube:dimensions`, `cube:variables` | Modelliert mehrdimensionale Raum-Zeit-Daten (z. B. Temperatur, Niederschlag). |
-| `projection` | Koordinatensysteme und Georeferenzierung | `proj:epsg`, `proj:bbox`, `proj:shape` | Fügt Informationen zu Projektionen und CRS hinzu, wichtig für GIS-Analysen. |
-| `language` | Mehrsprachige Metadaten | `lang:titles`, `lang:descriptions` | Unterstützt mehrsprachige Titel, Beschreibungen und Schlüsselwörter in STAC-Metadaten. |
+| `eo`  | Multi-spektrale Satellitendaten (z. B. Sentinel-2, Landsat) | `eo:bands`, `eo:cloud_cover`, `eo:sun_azimuth` | Beschreibt spektrale Bänder, Sensorparameter und Wolkenbedeckung für optische Erdbeobachtungsdaten |
+| `sar` | Radar-Daten (z. B. Sentinel-1) | `sar:polarizations`, `sar:frequency_band`, `sar:product_type` | Ergänzt Metadaten zu Polarisation, Frequenzband und Produkttyp für SAR-Daten |
+| `pointcloud` | 3D-Daten / LiDAR / Drohnenbefliegungen | `pc:type`, `pc:count`, `pc:density` | Beschreibt Punktwolken mit Angaben zu Punktanzahl, Dichte und Klassifizierung |
+| `datacube` | Zeitreihen-, Klima- und Wetterdaten | `cube:dimensions`, `cube:variables` | Modelliert mehrdimensionale Raum-Zeit-Daten (z. B. Temperatur, Niederschlag) |
+| `projection` | Koordinatensysteme und Georeferenzierung | `proj:epsg`, `proj:bbox`, `proj:shape` | Fügt Informationen zu Projektionen und CRS hinzu, wichtig für GIS-Analysen |
+| `language` | Mehrsprachige Metadaten | `lang:titles`, `lang:descriptions` | Unterstützt mehrsprachige Titel, Beschreibungen und Schlüsselwörter in STAC-Metadaten |
 
 *Weitere Informationen:* [extensions](https://github.com/radiantearth/stac-spec/tree/master/extensions)
 
