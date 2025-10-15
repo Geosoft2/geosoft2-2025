@@ -1,5 +1,8 @@
+# Datenbanken
+von Lenn Kruck ([@Escombra](https://github.com/Escombra)) und Kian Jay Lenert ([@kjlenert](https://github.com/kjlenert))
+
+
 # Grundtypen von Datenbanken
-von Lenn Kruck (@Escombra) und Kian Jay Lenert (@kjlenert)
 
 ## Relationale Datenbanken
 - bestehen aus Tabellen, die Relationen genannt werden
@@ -16,7 +19,6 @@ von Lenn Kruck (@Escombra) und Kian Jay Lenert (@kjlenert)
 - relationales Datenbankschema:
     - Menge von Relationenschemata
     - Integritätsbedingungen (integrity constraints)
-    - Intension
 - Extension: konkrete Relation / Datenbankzustand
 - Operationen basieren auf relationaler Algebra
 - am weitesten verbreitete Art von Datenbank
