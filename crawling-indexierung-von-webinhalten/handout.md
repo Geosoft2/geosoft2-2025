@@ -177,11 +177,13 @@ G) Kompressions- und Speicherstrategien
 - Typische Einsatzfälle: Große, read‑heavy Indizes mit begrenztem Speicherbudget.
 - Trade‑off: Speicherersparnis vs. CPU‑Kosten und eventuell höhere Latenz pro Query.
 
-Zusammengefasst:
+Take-Away der Trade-Offs:
 - Freshness vs. Throughput: Batch maximiert Durchsatz; NRT/Streaming maximiert Freshness. Hybridansätze sind in der Praxis oft sinnvoll.
 - Genauigkeit vs. Speicher vs. Query‑Latenz: Speichern von zusätzlichen Informationen (Positions- und Phrase-Indizes) und komplexe Gewichtung der Indizes führt zu mehr Speicherbedarf und ist CPU-intensiver. Aggressive Kompression spart Platz, kann aber die CPU‑intensivtät und Query‑Latenz weiter erhöhen.
 
-Zusammenfassung
+---
+
+**Zusammenfassung Indexierung**:\
 Indexierung ist mehr als "Wörter speichern": Es ist ein ganzes Ökosystem aus Textaufbereitung, datenstruktureller Gestaltung, Kompressions- und Verteilungsentscheidungen sowie Operationalisierung für Freshness und Skalierung. Die beste Strategie hängt von Anforderungen (Echtzeitbedarf, Speicher, Relevanzqualität) ab; häufig ist ein Hybridansatz (z. B. schneller NRT-Index für Headlines + Batch-Merges für Volltext) der praktischste Kompromiss.
 
 
