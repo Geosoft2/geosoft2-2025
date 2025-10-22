@@ -52,9 +52,9 @@ Im Rahmen des **Kursprojekts** wird der STAC Index um eine **Collection Search-F
 
 ## STAC Browser
 
-Der STAC Browser ist ein Tool, um statische STAC-Datenbanken zu durchsuchen. Dabei werden die Daten möglichst benutzerfreundlich dargestellt. Der Browser wurde als Single-Page-Anwendung entwickelt, um Nutzung und Weiterentwicklung zu vereinfachen.
+Der STAC Browser ist ein Tool, um statische STAC-Kataloge durch "durchklicken" manuell zu erkunden oder dynamische APIs zu durchsuchen. Dabei werden die Daten möglichst benutzerfreundlich dargestellt. Der Browser wurde als Single-Page-Anwendung entwickelt, um Nutzung und Weiterentwicklung zu vereinfachen.
 
-Es gibt die Möglichkeit, den STAC Browser mit anderen Diensten zu verknüpfen. Die Nutzung von Extentions sowie Dockerisierung wird ebenfalls unterstützt. Der Browser kann auch in Verbindung mit APIs verwendet werden, der Fokus der Entwicklung liegt allerdings nicht auf dieser Nutzung.
+Es gibt die Möglichkeit, den STAC Browser mit anderen Diensten zu verknüpfen. Die Nutzung von Extentions sowie Dockerisierung wird ebenfalls unterstützt.
 
 Der STAC Browser kann über npm installiert und in eigene Webprojekte eingebunden werden. Dabei werden einige Elemente des Browsers automatisch erstellt, beispielsweise der Titel, der STAC Browser kann für das jeweilige Projekt aber auch angepasst werden.
 Es werden beispielsweise neun verschiedene Sprachen unterstützt, unter anderem Deutsch. Auch verschiedene Basemaps können zur Anzeige der Daten gerendert werden.
@@ -101,31 +101,31 @@ print(f"{len(items)} Items gefunden")
 ## STAC-js
 
 STAC-js ist eine Libary für JS, die Funktionen und Klassen enthält, die die Interaktion mit STAC-Daten oder schreibgeschützten STAC-Objekten vereinfachen. STAC-js kann im Browser und in NodeJS genutzt werden. Die Funktionen sind allerdings nicht direkt auf Dateien oder Dateisysteme anwendbar. So kann STAC-js nicht zum Erstellen oder Updaten eines Katalogs genutzt werden. STAC-js ist eine Basis für weitere Packages.
+Einzelne Funktionen oder Klassen wie gewohnt importiert werden.
 
-Es können einzelne Funktionen oder Klassen importiert werden.
+Dokumentation zu STAC-js: https://stac-js.moregeo.it/latest
 
+### Beispiel: Collection
+- Subklasse von CatalogLike
+- Initialisierung:
 ```js
-import getObjectType from 'stac-js'
-import {STACObject} from 'stac-js'
+new Collection(
+  data: Object, // das STAC Collection object
+  absoluteUrl: (string | null) //absolute URL der STAC Collection
+)
 ```
+- enthält beispielsweise die Funktionen...
+```js
+toGeoJSON() //gibt ein GeoJSON Feature für die STAC Collection
 
-### Beispiel: STACObject
+getBoundingBox() //gibt eine 2D bounding box für die gesamte Collection zurück
 
-* Basisklasse für STAC-Objekte
-* In der [Dokumentation](https://stac-js.moregeo.it/latest/#stacobject): "Don't instantiate this class!":
+getTemporalExtent() //gibt den Zeitraum zurück, den die Daten in der Collection abdecken.
 
-  * nicht dazu gedacht STAC-Objekte zu erstellen
-  * dazu gedacht mit STAC-Objekten zu interagieren
-* Enthält beispielsweise:
-
-  ```js
-  isAsset() //Ist das Objekt ein Asset?
-  getObjectType() //Um was für ein STAC-Objekt handelt es sich?
-  getMetadata(field) //Gibt die Metadaten zurück
-  getCenter() //gibt das Zentrum eines STAC-Objekts zurück
-  toJSON() //gibt ein JSON-Objekt zurück, das exportiert werden kann
-  ```
-
+getSummary(field)
+//gibt für den angegebenen field name die zusammengefassten Daten der Collection zurück
+//z.B. für eine Collection von Satellitendaten für das field "platform" ein Array aller Platformen der Satellitenbilder in der Collection
+```
 ---
 
 ## OL-STAC
@@ -134,7 +134,7 @@ OL-STAC ermöglicht es, STAC-Daten in einer STAC LayerGroup in OpenLayers anzuze
 
 ### Einbinden von OL-STAC in ein Projekt
 
-zunächst muss OL-STAC über npm installiert werden.
+Zunächst muss OL-STAC über npm installiert werden.
 
 Einbinden in den Code:
 
@@ -202,6 +202,6 @@ Insgesamt erleichtern die Tools die Zusammenarbeit zwischen Datenanbietern und N
 * Azavea, Radiant Earth Foundation (o.J.): *pystac-client.* [https://github.com/stac-utils/pystac-client](https://github.com/stac-utils/pystac-client) (zuletzt aufgerufen am 13.10.2025)
 * Azavea, Radiant Earth Foundation (o.J.): *PySTAC Documentation.* [https://pystac.readthedocs.io/en/stable/](https://pystac.readthedocs.io/en/stable/) (zuletzt aufgerufen am 13.10.2025)
 * Azavea, Radiant Earth Foundation (o.J.): *pystac-client Documentation.* [https://pystac-client.readthedocs.io/en/stable/](https://pystac-client.readthedocs.io/en/stable/) (zuletzt aufgerufen am 13.10.2025)
-* Radiant Earth Foundation (o.J.): *STAC Index.* [https://stacindex.org/](https://stacindex.org/) (zuletzt aufgerufen am 13.10.2025)
+* Mohr, M. (o.J.): *STAC Index.* [https://stacindex.org/](https://stacindex.org/) (zuletzt aufgerufen am 13.10.2025)
 * Radiant Earth Foundation (o.J.): *stacindex-website (GitHub Repository).* [https://github.com/radiantearth/stacindex-website](https://github.com/radiantearth/stacindex-website) (zuletzt aufgerufen am 13.10.2025)
 * Mohr, M. (2023): *The STAC Ecosystem and Community Overview.* [https://stacspec.org/en](https://stacspec.org/en) (zuletzt aufgerufen am 13.10.2025)
