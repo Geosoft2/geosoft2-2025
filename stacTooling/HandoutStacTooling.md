@@ -77,10 +77,10 @@ Mehr Informationen zur Installation und Nutzung: [https://github.com/radianteart
 
 ### Wichtige Funktionen
 
-* Unterstützung für **CQL2-Filter**, räumliche und zeitliche Suchanfragen
-* Einfache Integration in **Jupyter Notebooks** und Python-Workflows
-* Ideal für **Analyse, Tests und Entwicklung** eigener STAC-Erweiterungen
-* Ermöglicht das **Erstellen lokaler Catalogs** und deren Veröffentlichung über APIs
+* Unterstützung für CQL2-Filter sowie räumliche und zeitliche Suchanfragen
+* Nahtlose Einbindung in Jupyter Notebooks und Python-basierte Analyse-Workflows
+* Eignet sich zur Verwendung, Prüfung und Integration von STAC-Erweiterungen in eigenen Katalogstrukturen
+* Ermöglicht das Erstellen und Verwalten lokaler STAC-Catalogs sowie deren Bereitstellung über APIs
 
 ### Beispiel
 
