@@ -70,7 +70,7 @@ Hier setzt CQL2 an.
 
 ### Beispiel-Daten:
 
-| ID | platform    | cloud_cover (%) | date       | region    | geom |
+| ID | platform    | cloudcover (%)  | date       | region    | geom |
 |----|-------------|-----------------|------------|-----------|------|
 | 1  | Sentinel-2A | 8               | 2024-03-15 | Münster   | POLYGON((7.5 51.9, 7.7 51.9, 7.7 52.0, 7.5 52.0, 7.5 51.9)) |
 | 2  | Sentinel-2B | 23              | 2024-04-20 | Münster   | POLYGON((7.6 51.8, 7.8 51.8, 7.8 51.9, 7.6 51.9, 7.6 51.8)) |
