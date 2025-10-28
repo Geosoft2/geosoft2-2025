@@ -14,7 +14,7 @@ STAC (SpatioTemporal Asset Catalog) ist ein offener Standard zur Beschreibung, K
 - Ermöglicht effizientes Durchsuchen und Abrufen großer Datensätze
 - Unterstützt sowohl statische Kataloge als auch dynamische STAC-APIs
 
-STAC stellt sicher, dass raum-zeitliche Assets leicht auffindbar, zugänglich und wiederverwendbar sind – unabhängig vom Speicherort.
+STAC stellt sicher, dass raum-zeitliche Assets leicht auffindbar, zugänglich und wiederverwendbar sind – unabhängig vom Speicherort und -format.
 
 ## STAC-Komponenten
 
