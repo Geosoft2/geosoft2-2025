@@ -43,10 +43,10 @@ Es basiert auf einem GeoJSON Feature, das um zusätzliche Felder erweitert wird.
 | geometry     | GeoJSON Geometrie (Punkt, Polygon, etc.)       |
 | bbox         | Bounding Box (minimales umschließendes Rechteck) |
 | properties.datetime    | Zeitpunkt der Datenerfassung                  |
+| properties  | Innerhalb des properties Feldes können optional weitere benutzerdefinierte oder projektspezifische Felder angelegt werden|
 | links       | Verweise auf Collection oder verwandte Items |
 | assets       | Tatsächliche Datenressource (z. B. Satellitenbilder) |
 | collection  | Optional: ID der Collection, zu der das Item gehört |
-| properties  | Optional: Innerhalb des properties Feldes können weitere benutzerdefinierte oder projektspezifische Felder angelegt werden| 
 
 **Beispiel:**
 ```json
