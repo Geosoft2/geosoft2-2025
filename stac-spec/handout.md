@@ -92,6 +92,7 @@ Eine Collection kann sowohl übergeordnete (parent) Catalog- oder Collection-Obj
 | keywords | Optional: Schlüsselwörter zur Beschreibung           |
 | providers | Optional: Information zum Datenanbieter             |
 | summaries | Optional: Zusammenfassungen von Eigentschaften der enthaltenen Items             |
+| assets | Optional: Datenobjekte, die zur gesamten Collection gehören, nicht zum einzelnen Item |
 
 **Beispiel:**
 ```json
