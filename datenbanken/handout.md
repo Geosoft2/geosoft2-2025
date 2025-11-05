@@ -50,10 +50,6 @@ von Lenn Kruck ([@Escombra](https://github.com/Escombra)) und Kian Jay Lenert ([
     - Skalierbarkeit (horizontal und vertikal)
     - Datenerfassung muss in kein Schema passen
 - ### Nachteile:
-    - keine komplexen Abfragen möglich
-    - Abfragen komplizierter zu schreiben
-    - ungeeignet für stark normalisierte Daten
-    - weniger ausgereift
     - nicht standardisiert (verschiedene Abfragesprachen, ACID-Konformität)
 
 ## Graphdatenbanken
@@ -79,6 +75,10 @@ PostgreSQL ist ein objekt-relationales Open-Source-Datenbanksystem, das den SQL-
     - Module: Postgis, pgRouting, hstore, timescaldedb
 - ACID-konform (Atomicity, Consistency, Isolation, Durability)
 
+## Installation
+Beispielhafte Installation unter Ubuntu:   
+`sudo apt install postgresql` 
+
 # PostGIS
 PostGIS erweitert PostgreSQL um die Fähigkeit, räumliche Daten zu speichern, zu analysieren und abzufragen.
 Beispiele für Geodatentypen: GEOMETRY (Punkt, Linie, Polygon), GEOGRAPHY  (geografische Koordinaten, z.B. WGS84).
@@ -97,7 +97,7 @@ Wichtige Funktionen:
 
 ## Installation
 Beispielhafte Installation unter Ubuntu:   
-`sudo apt install postgresql postgis` 
+`sudo apt install postgis` 
 
 Datenbank mit PostGIS anlegen:  
 `CREATE DATABASE geodaten;
