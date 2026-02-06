@@ -97,6 +97,7 @@ Für ein Softwareprojekt, in Bezug auf die Test-Pyramide: Insgesamt viele kleine
 ### Code Beispiel Unit Test
 
 Testet einzelne Funktion: Erstellung einer Datenbankabfrage für /collections?keyword=
+Verwendetes Testframework: Jest.
 
 ```javascript
 // searchUtils.js
