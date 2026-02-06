@@ -6,7 +6,9 @@
 
 ## 1. Introduction / Motivation
 
-Den eigenen Code zu testen ist immer sinnvoll. In der Softwareentwicklung und gerade bei Geosoftware-Projekten ist das Testen allerdings besonders wichtig: Viele Komponenten (Datenbank, API, STAC Index, …) treffen auf viele verschiedene Datenformate. Das erhöht die Fehleranfälligkeit. Testen verschafft dabei Vertrauen in die Funktionalität und verbessert die Reproduzierbarkeit sowie die Wartbarkeit. Dieses Handout gibt einen Überblick über grundlegende Testkonzepte in der Softwareentwicklung mit Fokus auf JavaScript/Node.js und typische Backend-/Geosoftware-Architekturen.
+Den eigenen Code zu testen ist immer sinnvoll. In der Softwareentwicklung und gerade bei Geosoftware-Projekten ist das Testen allerdings besonders wichtig: Viele Komponenten (Datenbank, API, STAC Index, …) treffen auf viele verschiedene Datenformate. Das erhöht die Fehleranfälligkeit. Testen verschafft dabei Vertrauen in die Funktionalität und verbessert die Reproduzierbarkeit sowie die Wartbarkeit.
+
+Dieses Handout gibt einen Überblick über grundlegende Testkonzepte in der Softwareentwicklung mit Fokus auf JavaScript/Node.js und typische Backend-/Geosoftware-Architekturen.
 
 ## 2. The Test Pyramid
 
@@ -59,7 +61,7 @@ Beide Ansätze sind nützlich. In komplexen Systemen wie STAC Index empfiehlt si
 
 Tests vor dem Code zu schreiben ist notwendig, aber nicht hinreichend für TDD. Entscheidend ist der konsequente Red-Green-Refactor-Zyklus.
 
-####TDD in der Praxis####
+__TDD in der Praxis__
 In der Praxis wird Test-Driven Development nicht immer konsequent angewendet:
   - Hoher initialer Aufwand: TDD erfordert Erfahrung und kann die Entwicklung zunächst verlangsamen.
   - Schlecht testbare Komponenten (z. B. UI, externe Systeme) erschweren echtes TDD.
