@@ -58,11 +58,11 @@ Die folgenden Bibliotheken und Tools bilden die technische Grundlage für den Ei
 
 | Kategorie | Name | Beschreibung |
 | :--- | :--- | :--- |
-| **Wasm Geospatial Core** | **GEOS-WASM** | WebAssembly-Build der C++-Geospatial-Bibliothek GEOS. Ermöglicht Low-Level-Geometrieoperationen mit nahezu nativer Performance. Essenziell für die effiziente Verarbeitung der STAC-Item-Geometrien. |
-| **Wasm Geospatial Tools** | **wasm-pack** | Toolchain für die Kompilierung von Rust-Code nach WebAssembly und die Generierung der JavaScript-Schnittstellen. |
-| **Wasm Geospatial Tools** | **Emscripten** | Standard-Toolchain zur Kompilierung von C/C++-Code nach WebAssembly. Essenziell für die Portierung etablierter C-Bibliotheken. |
-| **STAC Utility (Backend)** | **PySTAC**, **stac-fastapi** | Frameworks zur Erstellung, Validierung und Bereitstellung von STAC-Katalogen. Liefern die optimierte Datengrundlage für die clientseitig optimierte Suche mit WebAssembly. |
-| **Wasm Datenbank/Index** | **SQL.js** | Ermöglicht die Bereitstellung einer vollständigen SQL-Datenbank zur Speicherung und schnellen Abfrage von Metadaten-Caches direkt im Browser. Relevant für die komplexe Suche in STAC-Katalogen. |
+| **Wasm Geospatial Core** | [**GEOS-WASM**](https://chrispahm.github.io/geos-wasm) | WebAssembly-Build der C++-Geospatial-Bibliothek GEOS. Ermöglicht Low-Level-Geometrieoperationen mit nahezu nativer Performance. Essenziell für die effiziente Verarbeitung der STAC-Item-Geometrien. |
+| **Build- & Toolchains** | [**wasm-pack**](https://github.com/rustwasm/wasm-pack) | Toolchain für die Kompilierung von Rust-Code nach WebAssembly und die Generierung der JavaScript-Schnittstellen. |
+| **Build- & Toolchains** | [**Emscripten**](https://emscripten.org)| Standard-Toolchain zur Kompilierung von C/C++-Code nach WebAssembly. Essenziell für die Portierung etablierter C-Bibliotheken. |
+| **Wasm STAC Utility** | [**stac-rs**](https://github.com/stac-utils/stac-rs) | Rust-Implementierung der STAC-Spezifikation, die nach WebAssembly kompiliert werden kann und clientseitig im Browser einsetzbar ist. Ermöglicht das effiziente Parsen, Validieren und Erstellen von STAC-Metadaten auf dem Client, wodurch serverseitige STAC-Verarbeitung und zusätzliche API-Latenzen entfallen. |
+| **Wasm Datenbank/Index** | [**SQL.js**](https://sql.js.org) | Ermöglicht die Bereitstellung einer vollständigen SQL-Datenbank zur Speicherung und schnellen Abfrage von Metadaten-Caches direkt im Browser. Relevant für die komplexe Suche in STAC-Katalogen. |
 
 
 ---
@@ -74,9 +74,9 @@ Die breite Akzeptanz von WebAssembly in der Industrie dient als Beleg für seine
 
 | Anwendung | Beschreibung | Relevanz |
 | :--- | :--- | :--- |
-| **Google Earth Web** | Führt rechenintensive 3D-Geometrie- und Terrainberechnungen im Browser mithilfe von WebAssembly (kompiliert aus C++) aus. In Kombination mit WebGL ermöglicht dies ein flüssiges, interaktives 3D-Erlebnis globaler Geodaten. | Beispiel für 3D-Visualisierung und Geodatenverarbeitung mit nativer Performance im Web. |
-| **Figma** | Kollaborative Design-Plattform, die WebAssembly nutzt, um komplexe Vektor- und Pixeldaten effizient im Browser zu verarbeiten. Dadurch wird flüssiges, latenzarmes Arbeiten an großen Designprojekten ermöglicht. | Beispiel für leistungsfähige Client-seitige Anwendungen mit rechenintensiver Logik. |
-| **AutoCAD Web** | Führt den ursprünglich in C++ implementierten CAD-Kern mithilfe von WebAssembly direkt im Browser aus. So wird präzises 2D/3D-Rendering ohne lokale Installation möglich. | Demonstriert die Portierung komplexer Desktop-Software in leistungsfähige, webbasierte Umgebungen. |
+| **Google Earth Web** | Führt rechenintensive 3D-Geometrie- und Terrainberechnungen im Browser mithilfe von WebAssembly (kompiliert aus C++) aus. In Kombination mit WebGL ermöglicht dies ein flüssiges, interaktives 3D-Erlebnis globaler Geodaten  [(vgl. Mears, 2019)](https://web.dev/case-studies/earth-webassembly?hl=de). | Beispiel für 3D-Visualisierung und Geodatenverarbeitung mit nativer Performance im Web. |
+| **Figma** | Kollaborative Design-Plattform, die WebAssembly nutzt, um komplexe Vektor- und Pixeldaten effizient im Browser zu verarbeiten. Dadurch wird flüssiges, latenzarmes Arbeiten an großen Designprojekten ermöglicht [(vgl. Wallace, 2017)](https://www.figma.com/blog/webassembly-cut-figmas-load-time-by-3x/). | Beispiel für leistungsfähige Client-seitige Anwendungen mit rechenintensiver Logik. |
+| **AutoCAD Web** | Führt den ursprünglich in C++ implementierten CAD-Kern mithilfe von WebAssembly direkt im Browser aus. So wird präzises 2D/3D-Rendering ohne lokale Installation möglich [(vgl. O’Brien, 2018)](https://www.autodesk.com/blogs/autocad/autocad-web-app-google-io-2018/). | Demonstriert die Portierung komplexer Desktop-Software in leistungsfähige, webbasierte Umgebungen. |
 
 
 ---
@@ -95,7 +95,7 @@ clientseitigen Bildkompression.
 
 - Während JavaScript eine Programmiersprache ist, dient WebAssembly als Kompilierungsziel für andere Sprachen.
 
-- JavaScript ist auch am Edge verbreitet, etwa bei Cloudflare Workers oder Deno Deploy. WebAssembly gewinnt dort ebenfalls an Bedeutung, besonders für rechenintensive Module.
+- Auch im Bereich des Edge Computings dominiert JavaScript (z.B. für Routing oder Request-Handling) bei Anbietern wie Cloudflare Workers [(vgl. Cloudflare Inc., o.J.)](https://developers.cloudflare.com/workers/runtime-apis/webassembly/) oder Deno Deploy [(vgl. Deno Land Inc., o.J.)](https://docs.deno.com/runtime/reference/wasm/). WebAssembly gewinnt dort jedoch zunehmend an Bedeutung, um rechenintensive Module performant auszuführen, die mit reinem JavaScript zu langsam wären.
 
 Zusammengefasst besteht keine Konkurrenz zwischen JavaScript und WebAssembly. Beide ergänzen sich. WebAssembly profitiert von der Interoperabilität mit JavaScript, da so eine optimale Einbindung in den Browser möglich ist.
 
@@ -133,8 +133,22 @@ WebAssembly ersetzt JavaScript nicht, sondern ergänzt es. Die Kombination beide
 
 - Chrispahm. (2024). GEOS-WASM. GitHub Page. https://chrispahm.github.io/geos-wasm/ (Zuletzt aufgerufen am 14.10.2025).
 
+- The Rust and WebAssembly Working Group (o. J.): wasm-pack. GitHub Repository. https://github.com/rustwasm/wasm-pack (Zuletzt aufgerufen am 05.02.2026).
+
+- Emscripten Contributors (o. J.): Emscripten: A complete WebAssembly & asm.js toolchain. https://emscripten.org/ (Zuletzt aufgerufen am 05.02.2026).
+
+- stac-utils (o. J.): stac-rs: Rust implementation of the SpatioTemporal Asset Catalog (STAC) specification. GitHub Repository. https://github.com/stac-utils/stac-rs (Zuletzt aufgerufen am 05.02.2026).
+
+- SQL.js Community (o. J.): SQL.js: SQLite compiled to WebAssembly. https://sql.js.org/ (Zuletzt aufgerufen am 05.02.2026).
+
 - De Melo, L. (2024). Real-Time Geospatial Intelligence: Leveraging Rust WebAssembly and Predictive AI for Browser-Based Spatial Queries. https://medium.com/@LeonardoDeMeloWeb/real-time-geospatial-intelligence-leveraging-rust-webassembly-and-predictive-a608ca5ed7c2 (Zuletzt aufgerufen am 14.10.2025).
 
-- STAC Specification. (2024). Create a STAC Catalog with a Collection Using PySTAC. https://stacspec.org/en (Zuletzt aufgerufen am 14.10.2025).
+- Mears, J. (2019): Google Earth on WebAssembly. https://web.dev/case-studies/earth-webassembly?hl=de (Zuletzt aufgerufen am 05.02.2026).
 
-- Sparkgeo. (2024). Introducing stac-fastapi-indexed: Low Overhead STAC Metadata Support. https://sparkgeo.com/blog/introducing-stac-fastapi-indexed-low-overhead-stac-metadata-support/ (Zuletzt aufgerufen am 14.10.2025).
+- Wallace, E. (2017): WebAssembly cut Figma's load time by 3x. https://www.figma.com/blog/webassembly-cut-figmas-load-time-by-3x/ (Zuletzt aufgerufen am 05.02.2026).
+
+- O'Brien, M. (2018): The AutoCAD Web App: Google I/O 2018. https://www.autodesk.com/blogs/autocad/autocad-web-app-google-io-2018/ (Zuletzt aufgerufen am 05.02.2026).
+
+- Cloudflare Inc. (o. J.): WebAssembly (Wasm) in Workers. Cloudflare Developers Docs. https://developers.cloudflare.com/workers/runtime-apis/webassembly/ (Zuletzt aufgerufen am 05.02.2026).
+
+- Deno Land Inc. (o. J.): WebAssembly in Deno. Deno Docs. https://docs.deno.com/runtime/reference/wasm/ (Zuletzt aufgerufen am 05.02.2026).
