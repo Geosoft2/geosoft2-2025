@@ -61,7 +61,7 @@ Beide Ansätze sind nützlich. In komplexen Systemen wie STAC Index empfiehlt si
 
 Tests vor dem Code zu schreiben ist notwendig, aber nicht hinreichend für TDD. Entscheidend ist der konsequente Red-Green-Refactor-Zyklus.
 
-__TDD in der Praxis__
+#### TDD in der Praxis
 In der Praxis wird Test-Driven Development nicht immer konsequent angewendet:
   - Hoher initialer Aufwand: TDD erfordert Erfahrung und kann die Entwicklung zunächst verlangsamen.
   - Schlecht testbare Komponenten (z. B. UI, externe Systeme) erschweren echtes TDD.
