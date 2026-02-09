@@ -8,6 +8,8 @@
 
 Den eigenen Code zu testen ist immer sinnvoll. In der Softwareentwicklung und gerade bei Geosoftware-Projekten ist das Testen allerdings besonders wichtig: Viele Komponenten (Datenbank, API, STAC Index, …) treffen auf viele verschiedene Datenformate. Das erhöht die Fehleranfälligkeit. Testen verschafft dabei Vertrauen in die Funktionalität und verbessert die Reproduzierbarkeit sowie die Wartbarkeit.
 
+Dieses Handout gibt einen Überblick über grundlegende Testkonzepte in der Softwareentwicklung mit Fokus auf JavaScript/Node.js und typische Backend-/Geosoftware-Architekturen.
+
 ## 2. The Test Pyramid
 
 Die Test-Pyramide wird oft genutzt, um die Balance zwischen den verschiedenen Testtypen zu visualisieren.
@@ -55,7 +57,18 @@ Im TDD gibt es unterschiedliche Herangehensweisen und zwei „Schulen“ des TDD
 | Vorteile | Realistischere Tests, refactoringfreundlich | Schnellere, isolierte Tests, gute Fehlerlokalisierung |
 | Nachteile | Komplexere Integration, langsamer | Tests brechen bei Refactoring oft (hohe Kopplung an Implementierung) |
 
-Beide Ansätze sind nützlich. In komplexen Systemen wie STAC Index empfiehlt sich allerdings ein hybrider Stil: Unit Tests im London-Stil, Integrationstests im Chicago-Stil.
+Beide Ansätze sind nützlich. In komplexen Systemen wie STAC Index empfiehlt sich allerdings ein hybrider Stil: Unit-Tests mit gezieltem Einsatz von Mocks (London-Stil), ergänzt durch realistische Integrationstests ohne Mocks (Chicago-Stil). 
+
+Tests vor dem Code zu schreiben ist notwendig, aber nicht hinreichend für TDD. Entscheidend ist der konsequente Red-Green-Refactor-Zyklus.
+
+#### TDD in der Praxis
+In der Praxis wird Test-Driven Development nicht immer konsequent angewendet:
+  - Hoher initialer Aufwand: TDD erfordert Erfahrung und kann die Entwicklung zunächst verlangsamen.
+  - Schlecht testbare Komponenten (z. B. UI, externe Systeme) erschweren echtes TDD.
+  - Zeitdruck und Legacy-Code führen dazu, dass Tests oft nachträglich oder nur teilweise geschrieben werden.
+Daher wird TDD häufig selektiv eingesetzt, insbesondere für stabile und kritische Kernlogik.
+
+
 
 ## 5. Test Doubles: Mocks, Stubs und Spies
 
@@ -70,6 +83,7 @@ Arten:
 - Mocks: Überprüfen Interaktionen. Test schlägt fehl, wenn erwarteter Aufruf nicht erfolgt.
 - Stubs: Geben vorgefertigte Antworten zurück. Haben kein echtes Verhalten, sondern liefern die definierte Antwort. Beispiel im STAC-Kontext: Eine Stub-Datenbankfunktion gibt eine feste Liste von STAC-Collections zurück, ohne eine echte Datenbankabfrage.
 - Spies: Beobachten, was passiert, ohne Verhalten zu erzwingen. Zeichnen z. B. auf, wie viele Aufrufe oder Parameter verwendet wurden.
+- Fakes: Vereinfachte, funktionierende Implementierungen (z. B. In-Memory-Datenbank), die sich realistisch verhalten, aber nicht produktiv sind
 
 Quellen:
 - Steve Freeman & Nat Pryce – Growing Object-Oriented Software, Guided by Tests (2009)
@@ -114,12 +128,12 @@ test("buildCollectionQuery creates a regex filter", () => {
 });
 ```
 
-Keine echte API, kein Serverstart.
+Der Test prüft ausschließlich die Rückgabe der Funktion und hat keine externen Abhängigkeiten (keine Datenbank, kein Serverstart).
 
 ## 7. Common Test Frameworks
 
-- **Jest** → Test-Framework  
-- **supertest** → API-Integration-Tests  
+- **Jest** → All-in-one Testframework (Runner, Assertions, Mocks).
+- **supertest** → API-Integration-Tests, HTTP-basiert.  
 - **Mocha/Chai** → Alternative für Unit-Tests  
 
 ### Quellen
