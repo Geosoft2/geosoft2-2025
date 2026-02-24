@@ -18,22 +18,22 @@ Während die **STAC Spezifikation** das Datenmodell und statische JSON-Strukture
 
 | Aspekt | STAC (statisch) | STAC API (dynamisch) |
 |--------|------------------|----------------------|
-| **Datenmodell** | JSON-Dateien (Catalog, Collection, Item) mit Hyperlinks | Gleiche Datenstruktur, aber per HTTP-Endpunkte zugänglich |
+| **Datenmodell** | JSON-Dateien (Catalog, Collection, Item) mit Hyperlinks | Fokus auf Collections und Items über HTTP-Endpunkte; ItemCollections als paginierte Ergebnislisten |
 | **Zugriff** | Statischer Webserver oder Cloud Storage (z. B. GitHub Pages, S3) | RESTful Webservice mit GET/POST Requests |
 | **Navigation** | Manuelles Browsen über Links | Programmatische Suche und Filterung (Raum, Zeit, Metadaten) |
 | **Interaktivität** | Keine – Inhalte sind fix | Dynamisch – Abfragen, Paging, Filter, Sortierung möglich |
 | **Hosting-Aufwand** | Minimal (Dateien veröffentlichen) | Höher – API-Server notwendig |
-| **Typische Nutzung** | Dokumentation, Open Data Portale, Referenzkataloge | Datenzugriff für Clients, Analyseplattformen, Visualisierungstools |
+| **Typische Nutzung** | Dokumentation, Open Data Portale, Referenzkataloge | Performante Suche, Filterung und automatisierter Zugriff auf große oder häufig aktualisierte Datenbestände |
 
 > **Kurz gesagt:**  
-> Die STAC API ist die *programmierbare* Erweiterung der statischen STAC-Kataloge – beide nutzen dasselbe Datenmodell, unterscheiden sich aber in der Art des Zugriffs.
+> Die STAC API erweitert statische STAC-Kataloge um standardisierte Web-Service-Endpunkte, die von Software automatisiert abgefragt werden können (z.B. über HTTP-Requests mit Raum- und Zeitfiltern).
 
 ---
 
 ## 3. Architektur der STAC API (ohne Erweiterungen)
 
 Die **STAC API Core Spezification** baut auf HTTP und JSON auf und ist modular strukturiert.
-Sie definiert den Kern (Core), auf den Erweiterungen aufsetzen können (z.B. Filter, Sortierung, Pagination, Query).
+Sie definiert den Kern (Core), auf den Erweiterungen aufsetzen können (z.B. Filter, Sortierung, Query).
 
 ### Komponenten der Architektur
 
@@ -44,7 +44,7 @@ Sie definiert den Kern (Core), auf den Erweiterungen aufsetzen können (z.B. Fil
  Beschreiben Datensammlungen (z.B. Sentinel-2, Landsat-8).
  Enthalten Metadaten wie räumliche/zeitliche Abdeckung, Lizenz, Assets.
 
-- **Items (`/collections/{collectionId}items`)**
+- **Items (`/collections/{collectionId}/items`, `/collections/{collectionId}/items/{itemId}`)**
  Repräsentieren einzelne Beobachtungen oder Dateien innerhalb einer Collection.
 
 - **Search (`/search`)**
@@ -91,22 +91,22 @@ Diese Endpunkte entsprechen der **STAC API Core Specification**, ohne zusätzlic
 | Szenario | STAC (statisch) | STAC API (dynamisch) |
 |----------|-----------------|----------------------|
 | Kleine fixe Datensätze | Ideal | Overkill|
-| Große, häufig aktualisierte Datensätze | Ungeeignet | Optimal |
+| Große, häufig aktualisierte Datensätze | Möglich, aber schwer effizient zu durchsuchen | Optimal |
 | Nutzerfreundliche Suche | Manuell | Automatisiert |
-| Integration in Clients | Eingeschränkt | Einfach |
+| Integration in Clients | Möglich, aber ohne standardisierte Suchschnittstelle | Einfach durch standardisierte API-Endpunkte |
 
 ---
 
 ## 6. Bedeutung für das Geosoftware-II-Projekt
 
-Der **STAC Index** dient als *Meta-Katalog* über viele bestehende STAC-APIs.
+Der **STAC Index** dient als *Meta-Katalog* über viele bestehende STAC-APIs und statische STAC Kataloge.
 Im Rahmen des Projekts soll dieser Index um eine **Collection Search** erweitert werden - das heißt, Benutzer sollen nicht nur einzelne Items finden, sonder gezielt nach *Collections* über mehrere APIs hinweg suchen können.
 
 Das Verständnis der **STAC API Architektur und ihrer Endpunkte** ist dafür essenziell:
-- um zu wissen, **welche Daten verfügbar** sind (`/collections`)
-- um zu verstehen, **wie Suchabfragen** funktionieren (`/search`)
-- um später **Aggregation und Indexierung** über viele APIs zu ermöglichen
-
+- um zu ermitteln, **welche Collections eine API bereitstellt** (`/collections`)
+- um die **Struktur und Verlinkung von STAC-Ressourcen** zu verstehen
+- um optional über Item-Suchen (`/search`) zusätzliche Hinweise auf relevante Collections zu gewinnen
+- und um darauf aufbauend eine API-übergreifende Collection-Suche zu implementieren
 --- 
 
 ## 7. Quellen & weiterführende Literatur
